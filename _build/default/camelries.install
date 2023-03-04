@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/camelries/META"
+  "_build/install/default/lib/camelries/dune-package"
+  "_build/install/default/lib/camelries/opam"
+]
+bin: [
+  "_build/install/default/bin/camelries"
+]
