@@ -1,4 +1,7 @@
-(executable
- (public_name camelries)
- (name main)
- (libraries camelries))
+(library
+ (name interp))
+
+(menhir
+ (modules parser))
+
+(ocamllex lexer)

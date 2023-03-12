@@ -1,87 +1,54 @@
-let () = print_endline "Hello, World!";;
+open Ast
 
-type formule =
-      F of int
-    | Ou of formule * formule
-    | Et of formule * formule
-    | Im of formule * formule
-    | Non of formule;;
+(** [parse s] parses [s] into an AST. *)
+let parse (s : string) : expr =
+  let lexbuf = Lexing.from_string s in
+  let ast = Parser.prog Lexer.read lexbuf in
+  ast
 
-type valuation = int array;;
+(** [Env] is module to help with environments, which
+    are maps that have strings as keys. *)
+module Env = Map.Make(String)
 
-let ou a b =
-  if a = 1 then a
-  else b;;
+(** [env] is the type of an environment, which maps
+    a string to a value. *)
+type env = value Env.t
 
-let et a b =
-  if (a = 1) && (b = 1) then 1
-  else 0;;
+(** [value] is the type of a lambda calculus value.
+    In the environment model, that is a closure. *)
+and value =
+  | Closure of string * expr * env
 
-let non a = 1 - a;;
+let unbound_var_err = "Unbound variable"
 
-let im a b = ou (non a) b;;
+type scope_rule = Lexical | Dynamic
+let scope = Lexical
 
-let xor a b = et (ou a b) (non (et a b));;
+(** [eval env e] is the [<env, e> ==> v] relation. *)
+let rec eval (env : env) (e : expr) : value = match e with
+  | Var x -> eval_var env x
+  | App (e1, e2) -> eval_app env e1 e2
+  | Fun (x, e) -> Closure (x, e, env)
 
-let a = Et(Et(F 0,Ou(F 1,F 2)),Non(Im(F 3,F 4)));;
+(** [eval_var env x] is the [v] such that [<env, x> ==> v]. *)
+and eval_var env x =
+  try Env.find x env with Not_found -> failwith unbound_var_err
 
-let tab : valuation = [|1;1;0;1;1|];;
+(** [eval_app env e1 e2] is the [v] such that [<env, e1 e2> ==> v]. *)
+and eval_app env e1 e2 =
+  match eval env e1 with
+  | Closure (x, e, defenv) -> begin
+      let v2 = eval env e2 in
+      let base_env_for_body =
+        match scope with
+        | Lexical -> defenv
+        | Dynamic -> env in
+      let env_for_body = Env.add x v2 base_env_for_body in
+      eval env_for_body e
+    end
 
-
-
-let rec evaluer a t = match a with
-    F x -> t.(x)
-  | Ou (d, g) -> ou (evaluer d t) (evaluer g t)
-  | Et (d, g) -> et (evaluer d t) (evaluer g t)
-  | Im (d, g) -> im (evaluer d t) (evaluer g t)
-  | Non x -> non (evaluer x t);;
-
-(*let evaluer_rev a t =*)
-(*  let rec aux a t = match a with*)
-(*      F x -> t.(n - x)*)
-(*    | Ou (d, g) -> ou (evaluer_rev d t) (evaluer_rev g t)*)
-(*    | Et (d, g) -> et (evaluer_rev d t) (evaluer_rev g t)*)
-(*    | Im (d, g) -> im (evaluer_rev d t) (evaluer_rev g t)*)
-(*    | Non x -> non (evaluer_rev x t);;*)
-
-let rec ecrire1 a = match a with
-  | F x -> string_of_int x
-  | Ou (d, g) -> "(" ^ (ecrire1 d) ^ "v" ^ (ecrire1 g) ^ ")"
-  | Et (d, g) -> "(" ^ (ecrire1 d) ^ "^" ^ (ecrire1 g) ^ ")"
-  | Im (d, g) -> "(" ^ (ecrire1 d) ^ "#" ^ (ecrire1 g) ^ ")"
-  | Non x -> "(-" ^ (ecrire1 x) ^ ")";;
-
-let rec ecrire2 a t = match a with
-  | F x -> string_of_int t.(x)
-  | Ou (d, g) -> "(" ^ (ecrire2 d t) ^ "v" ^ (ecrire2 g t) ^ ")"
-  | Et (d, g) -> "(" ^ (ecrire2 d t) ^ "^" ^ (ecrire2 g t) ^ ")"
-  | Im (d, g) -> "(" ^ (ecrire2 d t) ^ "#" ^ (ecrire2 g t) ^ ")"
-  | Non x -> "(-" ^ (ecrire2 x t) ^ ")";;
-
-let string_to_liste s =
-  let rec aux i l =
-    if i > (String.length s - 1) then l
-    else aux (i + 1) (s.[i] :: l)
-  in aux 0 [];;
-
-
-let creer_formule liste =
-  let rec aux l foret op i = match l with
-      [] ->
-        let oui f = match f with
-            [x] -> x
-            | _ -> failwith "bonsoir"
-        in oui foret
-    | 'x'::q -> aux q ((F i)::foret) op (i + 1)
-    | '('::q ->
-        let creer f o = match f, o with
-            x::q, '-'::p -> Non(x)::q, p
-          | x::y::q, 'v'::p -> Ou(x,y)::q, p
-          | x::y::q, '^'::p -> Et(x,y)::q, p
-          | x::y::q, '#'::p -> Im(x,y)::q, p
-        in
-        let a, b = creer foret op in
-          aux q a b i
-    | ')'::q -> aux q foret op i
-    | x::q -> aux q foret (x::op) i
-  in aux liste [] [] 0;;
+(** [interp s] interprets [s] by parsing
+    and evaluating it with the big-step model,
+    starting with the empty environment. *)
+let interp (s : string) : value =
+  s |> parse |> eval Env.empty

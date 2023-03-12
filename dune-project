@@ -1,19 +1,15 @@
 (lang dune 3.4)
+(using menhir)
 
 (name camelries)
 
 (generate_opam_files true)
 
 (source
- (github Sckathach/formal_calculus))
+ (github Camelram-Beta/camelram-beta))
 
 (authors "Sckathach")
 
-(maintainers "?")
-
-(license LICENSE)
-
-(documentation https://url/to/documentation)
 
 (package
  (name camelries)

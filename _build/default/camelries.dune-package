@@ -1,4 +1,4 @@
-(lang dune 3.6)
+(lang dune 3.4)
 (name camelries)
 (sections (lib .) (bin ../../bin))
 (files (lib (META dune-package opam)) (bin (camelries)))
