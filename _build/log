@@ -3,7 +3,7 @@
 # Shared cache: disabled
 # Workspace root: /mnt/Documents/CamelramBeta/camelram-beta
 # Auto-detected concurrency: 12
-$ /usr/bin/ocamlc.opt -config > /tmp/dune_769b5a_output
+$ /usr/bin/ocamlc.opt -config > /tmp/dune_b0be01_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -179,7 +179,17 @@ $ /usr/bin/ocamlc.opt -config > /tmp/dune_769b5a_output
 #      ; windows_unicode = false
 #      }
 #  }
-$ (cd _build/default && /usr/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.camelries.objs/byte -I lib/.camelries.objs/native -intf-suffix .ml -no-alias-deps -opaque -o bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl bin/main.ml)
+$ (cd _build/default && /usr/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I test/.camelries.eobjs/byte -I test/.camelries.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -o test/.camelries.eobjs/native/dune__exe__Camelries.cmx -c -impl test/camelries.ml)
+> File "test/camelries.ml", line 10, characters 13-15:
+> 10 |          [ x -> aux (acc*x)= (x-1)]
+>                   ^^
+> Error: Syntax error: ']' expected
+> File "test/camelries.ml", line 10, characters 9-10:
+> 10 |          [ x -> aux (acc*x)= (x-1)]
+>               ^
+>   This '[' might be unmatched
+[2]
+$ (cd _build/default && /usr/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.camelries.objs/byte -I lib/.camelries.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl bin/main.ml)
 > File "bin/main.ml", lines 77-81, characters 24-44:
 > 77 | ........................match f, o with
 > 78 |             x::q, '-'::p -> Non(x)::q, p
