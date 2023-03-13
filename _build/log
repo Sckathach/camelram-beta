@@ -1,5 +1,0 @@
-# /home/sckathach/.opam/default/bin/dune build --root=.
-# OCAMLPARAM: unset
-# Shared cache: disabled
-# Workspace root: /mnt/Documents/CamelramBeta/camelram-beta
-# Auto-detected concurrency: 12
