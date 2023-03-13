@@ -1,4 +1,0 @@
-(executable
- (public_name camelries)
- (name main)
- (libraries camelries))

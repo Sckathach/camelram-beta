@@ -1,6 +1,4 @@
-# Idea files
-.idea
-
-# Strange build
 _build
+main.native
+.idea
 
