@@ -11,6 +11,7 @@
 
 open Printf
 open Ast
+open Calc
 
 let main =
   let lexbuf = Lexing.from_channel stdin in
@@ -26,4 +27,4 @@ let main =
        exit 1
   in
     let _ = res in
-    Printf.printf "%s\n" (pprint_expr res)
+    Printf.printf "%d\n" (eval res)

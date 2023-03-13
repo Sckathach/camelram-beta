@@ -1,7 +1,7 @@
 
 // This is a line comment
+4+5*2
 
+// let x = 3 * 2 in
 
-let x = 3 * 2 in
-
-x + 4 * x
+// x + 4 * x
