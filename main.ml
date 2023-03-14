@@ -1,14 +1,3 @@
-(* An extended example with Menhir that outputs an abstract syntax tree (AST).
- * Copyright (C) David Broman, 2022. MIT License.
- *
- * This example shows how to parse and generate an abstract syntax tree.
- * The example also shows how keywords are handled, and how to
- * pretty print the AST.
- *
- * This video shows how the code is created:
- *   https://youtu.be/ly7yvyaDj08
- *)
-
 open Printf
 open Ast
 open Calc
@@ -27,4 +16,4 @@ let main =
        exit 1
   in
     let _ = res in
-    Printf.printf "%d\n" (eval res)
+    Printf.printf "%d\n" (eval res);;

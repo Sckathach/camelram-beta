@@ -1,4 +1,3 @@
-
 %{
    open Ast
 %}
@@ -26,29 +25,29 @@
 %%
 
 main:
-  | e = let_expr EOF
-    { e }
+    | e = let_expr EOF
+        { e }
 
 let_expr:
-  | LET id = IDENT "=" e1 = let_expr IN e2 = let_expr
-    { ELet(id, e1, e2) }
-  | e = expr
-    { e }
+    | LET id = IDENT "=" e1 = let_expr IN e2 = let_expr
+        { ELet(id, e1, e2) }
+    | e = expr
+        { e }
 
 expr:
-  | i = INT
-    { EInt(i) }
-  | e1 = expr "+" e2 = expr
-    { EBinOp(BopAdd, e1, e2) }
-  | e1 = expr "-" e2 = expr
-    { EBinOp(BopSub, e1, e2) }
-  | e1 = expr "*" e2 = expr
-    { EBinOp(BopMul, e1, e2) }
-  | e1 = expr "/" e2 = expr
-    { EBinOp(BopDiv, e1, e2) }
-  | "-" e = expr %prec UMINUS
-    { EUnOp(UnopMinus, e) }
-  | x = IDENT
-    { EVar(x) }
-  | "(" e = let_expr ")"
-    { e }
+    | i = INT
+        { EInt(i) }
+    | e1 = expr "+" e2 = expr
+        { EBinOp(BopAdd, e1, e2) }
+    | e1 = expr "-" e2 = expr
+        { EBinOp(BopSub, e1, e2) }
+    | e1 = expr "*" e2 = expr
+        { EBinOp(BopMul, e1, e2) }
+    | e1 = expr "/" e2 = expr
+        { EBinOp(BopDiv, e1, e2) }
+    | "-" e = expr %prec UMINUS
+        { EUnOp(UnopMinus, e) }
+    | x = IDENT
+        { EVar(x) }
+    | "(" e = let_expr ")"
+        { e }
