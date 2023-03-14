@@ -1,7 +1,13 @@
 # Camelram Bêta Compiler #
 
 ## Intro ##
-This compiler contains the parser, the lexer, the creation of the AST and some semantic. We use 
+This compiler aims to compile parts of LaTeX. There are already : 
+- basic operations on integers : `+ - *`
+- approximation of integrals (soon) : `\int`
+
+See the to-do list in the [issues](https://github.com/Camelram-Beta/compiler/issues).
+
+The compiler contains the parser, the lexer, the creation of the AST and some semantic. We use 
 [Menhir](http://gallium.inria.fr/~fpottier/menhir/) which is a descendant of 
 [ocamlyacc](https://v2.ocaml.org/manual/lexyacc.html). The project will soon use the more recent and faster build 
 tool [Dune](https://dune.build/) (instead of [ocamlbuild](https://github.com/ocaml/ocamlbuild)).
