@@ -22,7 +22,6 @@
 %left "+" "-"
 %left "*" "/"
 %nonassoc UMINUS
-%nonassoc INTEGRAL
 
 %start main
 %type <expr> main

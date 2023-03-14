@@ -33,6 +33,9 @@ setup.log
 # Local OPAM switch
 _opam/
 
+# Menhir conflicts file
+*.conflicts
+
 # Visual Studio
 
 # Visual Studio cache files
