@@ -18,7 +18,7 @@ rule token = parse
     | ident as str
         {
             match str with
-                | "\int" -> INTEGRAL
+                | "\int_" -> INTEGRAL
                 | "let" -> LET
                 | "in" -> IN
                 | s -> IDENT(s)
@@ -33,6 +33,8 @@ rule token = parse
         { MUL }
     | ['/']
         { DIV }
+    | ['^']
+        { POW }
     | digit+ as lxm
         { INT(int_of_string lxm) }
     | ['(']

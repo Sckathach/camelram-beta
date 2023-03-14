@@ -8,6 +8,7 @@
 %token SUB "-"
 %token MUL "*"
 %token DIV "/"
+%token POW "^"
 %token LPAREN "("
 %token RPAREN ")"
 %token LCBRA "{"
@@ -41,8 +42,8 @@ let_expr:
 expr:
     | i = INT
         { EInt(i) }
-    | INTEGRAL e = expr
-        { EIntegral(e) }
+    | INTEGRAL e1 = expr "^" e2 = expr e3 = expr
+        { EIntegral(e1, e2, e3) }
     | e1 = expr "+" e2 = expr
         { EBinOp(BopAdd, e1, e2) }
     | e1 = expr "-" e2 = expr

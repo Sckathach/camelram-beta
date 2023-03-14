@@ -1,8 +1,6 @@
 
 // This is a line comment
- \int (4) + 3
-
- + 19
+ \int_{0}^{4 + 3}{x} + 19
 
 // let x = 3 * 2 in
 
