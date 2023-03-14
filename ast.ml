@@ -7,7 +7,7 @@ type expr =
     | EInt      of int
     | EBinOp    of bop * expr * expr
     | EUnOp     of uop * expr
-    | EIntegral of expr * expr
+    | EIntegral of expr
     | ELet      of string * expr * expr
     | EVar      of string;;
 
@@ -27,8 +27,8 @@ let rec pprint_expr = function
         "EBinOp(" ^ pprint_bop bop ^ ", " ^ pprint_expr e1 ^ "," ^ pprint_expr e2 ^ ")"
     | EUnOp(uop, e) ->
         "EUnOp(" ^ pprint_uop uop ^ ", " ^ pprint_expr e ^ ")"
-    | EIntegral(e1, e2) ->
-        "EIntegral(" ^ pprint_expr e1 ^ ", " ^ pprint_expr e2 ^ ")"
+    | EIntegral(e) ->
+        "EIntegral(" ^ pprint_expr e ^ ")"
     | ELet(x, e1, e2) ->
         "ELet(" ^ x ^ ", " ^ pprint_expr e1 ^ ",\n" ^ pprint_expr e2 ^ ")"
     | EVar(x) ->
