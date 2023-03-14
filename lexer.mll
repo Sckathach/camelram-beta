@@ -1,4 +1,3 @@
-
 {
   open Parser
   exception Error of char
@@ -17,10 +16,12 @@ rule token = parse
    | ['\n']
        { Lexing.new_line lexbuf; token lexbuf }
    | ident as str
-       { match str with
-         | "let" -> LET
-         | "in" -> IN
-         | s -> IDENT(s)
+       {
+            match str with
+                | "ut" -> INTEGRAL
+                | "let" -> LET
+                | "in" -> IN
+                | s -> IDENT(s)
        }
    | ['=']
        { EQUAL }

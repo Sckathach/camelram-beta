@@ -12,6 +12,7 @@
 %token RPAREN ")"
 %token LET
 %token IN
+%token INTEGRAL
 %token <string> IDENT
 %token EOF
 
@@ -37,6 +38,8 @@ let_expr:
 expr:
     | i = INT
         { EInt(i) }
+    | INTEGRAL e1 = expr
+        { EIntegral(e1, e1) }
     | e1 = expr "+" e2 = expr
         { EBinOp(BopAdd, e1, e2) }
     | e1 = expr "-" e2 = expr
