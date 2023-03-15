@@ -22,7 +22,7 @@ apt install opam
 
 eval $(opam env)
 
-opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
+opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release menhir
 ```
 
 #### Archlinux 
@@ -31,8 +31,15 @@ pacman -S opam
 
 eval $(opam env)
 
-opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
+opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release menhir
 ```
+
+#### To update opam
+```sh
+opam update
+opam upgrade
+```
+
 ### Build with make
 ⚠️ It seems there is an issue with the permissions, make sure to build the project on a linux partition ⚠️
 ```sh 
