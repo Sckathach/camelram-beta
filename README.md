@@ -14,7 +14,7 @@ tool [Dune](https://dune.build/) (instead of [ocamlbuild](https://github.com/oca
 
 ## Test ##
 ### Install opam 
-#### Ubuntu
+Install on Ubuntu
 ```sh
 add-apt-repository ppa:avsm/ppa
 apt update
@@ -25,7 +25,7 @@ eval $(opam env)
 opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release menhir
 ```
 
-#### Archlinux 
+Install on Archlinux 
 ```sh
 pacman -S opam
 
@@ -34,7 +34,7 @@ eval $(opam env)
 opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release menhir
 ```
 
-#### To update opam
+To update opam
 ```sh
 opam update
 opam upgrade
@@ -58,7 +58,7 @@ cat test.txt | ./main.native
 ```
 
 ### Debug 
-#### Debug Menhir 
+Debug Menhir 
 ```sh 
 menhir path/to/file/parser.mly --explain
 ```
