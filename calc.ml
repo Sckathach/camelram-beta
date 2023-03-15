@@ -1,6 +1,7 @@
 open Ast
+open Pain
 
-let addition x y = x + y;;
+let addition x y = x + y + pi;;
 let subtraction x y = x - y;;
 let multiplication x y = x * y;;
 
@@ -12,4 +13,5 @@ let ex_op = function
 let rec eval = function
     | EInt(i) -> i
     | EBinOp(op, e1, e2) -> (ex_op op) (eval e1) (eval e2);;
+
 
