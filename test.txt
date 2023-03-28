@@ -1,29 +1,6 @@
 
-// This is a line comment
 
-3*4+  2
-// let x = 3 * 2 in
+let x = 3 * 2 in x + 3
 
-// x + 4 * x
-
-
-// Do something like this to seek errors (menhir gives the line of the error)
-\
-i
-n
-t
-_
-{
-0
-}
-^
-{
-1
-}
-{
-2
-}
-+
-3
 
 
