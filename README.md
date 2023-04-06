@@ -12,6 +12,20 @@ The compiler contains the parser, the lexer, the creation of the AST and some se
 [ocamlyacc](https://v2.ocaml.org/manual/lexyacc.html). The project will soon use the more recent and faster build 
 tool [Dune](https://dune.build/) (instead of [ocamlbuild](https://github.com/ocaml/ocamlbuild)).
 
+## Use ##
+
+When compiled with make, it can be used simply with `exec` : 
+```shell
+./exec "3+2"
+```
+For now, the program only takes an argument and evaluate it.
+
+Or by piping to `main.native` : 
+```shell
+echo "3+2" | ./main.native 
+```
+
+
 ## Test ##
 ### Install opam 
 #### Ubuntu
