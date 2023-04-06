@@ -21,6 +21,7 @@
 
 %left "+" "-"
 %left "*" "/"
+%nonassoc POW
 %nonassoc UMINUS
 
 %start main
