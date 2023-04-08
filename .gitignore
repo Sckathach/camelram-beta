@@ -1,6 +1,7 @@
 # Tests
 playground.ml
 init_utop.ml
+pg*
 
 # Intellij
 .idea
