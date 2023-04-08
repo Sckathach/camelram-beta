@@ -1,5 +1,6 @@
 # Tests
 playground.ml
+init_utop.ml
 
 # Intellij
 .idea
@@ -17,6 +18,7 @@ playground.ml
 
 # ocamlbuild working directory
 _build/
+build/
 
 # ocamlbuild targets
 *.byte
