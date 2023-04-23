@@ -1,7 +1,7 @@
 open Ast
 open Variable
 
-let addition x y = x + y + pi;;
+let addition x y = x + y;;
 let subtraction x y = x - y;;
 let multiplication x y = x * y;;
 
