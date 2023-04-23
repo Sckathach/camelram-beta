@@ -1,5 +1,6 @@
 open Ast
 open Variable
+open Functions
 
 let addition x y = x + y;;
 let subtraction x y = x - y;;
