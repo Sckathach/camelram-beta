@@ -8,15 +8,20 @@
 %token SUB "-"
 %token MUL "*"
 %token DIV "/"
+%token POW "^"
 %token LPAREN "("
 %token RPAREN ")"
+%token LCBRA "{"
+%token RCBRA "}"
 %token LET
 %token IN
+%token INTEGRAL
 %token <string> IDENT
 %token EOF
 
 %left "+" "-"
 %left "*" "/"
+%nonassoc POW
 %nonassoc UMINUS
 
 %start main
@@ -37,6 +42,8 @@ let_expr:
 expr:
     | i = INT
         { EInt(i) }
+    | INTEGRAL e1 = expr "^" e2 = expr e3 = expr
+        { EIntegral(e1, e2, e3) }
     | e1 = expr "+" e2 = expr
         { EBinOp(BopAdd, e1, e2) }
     | e1 = expr "-" e2 = expr
@@ -50,4 +57,6 @@ expr:
     | x = IDENT
         { EVar(x) }
     | "(" e = let_expr ")"
+        { e }
+    | "{" e = let_expr "}"
         { e }

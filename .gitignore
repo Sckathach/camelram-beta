@@ -1,3 +1,7 @@
+# Tests
+playground.ml
+init_utop.ml
+pg*
 
 # Intellij
 .idea
@@ -15,6 +19,7 @@
 
 # ocamlbuild working directory
 _build/
+build/
 
 # ocamlbuild targets
 *.byte
@@ -32,6 +37,9 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+# Menhir conflicts file
+*.conflicts
 
 # Visual Studio
 

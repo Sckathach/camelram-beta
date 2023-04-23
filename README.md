@@ -12,6 +12,20 @@ The compiler contains the parser, the lexer, the creation of the AST and some se
 [ocamlyacc](https://v2.ocaml.org/manual/lexyacc.html). The project will soon use the more recent and faster build 
 tool [Dune](https://dune.build/) (instead of [ocamlbuild](https://github.com/ocaml/ocamlbuild)).
 
+## Use ##
+
+When compiled with make, it can be used simply with `exec` : 
+```shell
+./exec "3+2"
+```
+For now, the program only takes an argument and evaluate it.
+
+Or by piping to `main.native` : 
+```shell
+echo "3+2" | ./main.native 
+```
+
+
 ## Test ##
 ### Install opam 
 #### Ubuntu
@@ -34,13 +48,13 @@ eval $(opam env)
 opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
 ```
 ### Build with make
-⚠️ It seems there is an issue with the permissions, make sure to build the project on a linux partition ⚠️
+~~⚠️ It seems there is an issue with the permissions, make sure to build the project on a linux partition ⚠️~~
 ```sh 
 make
 ```
 
 ### Build the project with ocamlbuild
-⚠️ It seems there is an issue with the permissions, make sure to build the project on a linux partition ⚠️
+~~⚠️ It seems there is an issue with the permissions, make sure to build the project on a linux partition ⚠️~~
 ```sh
 ocamlbuild -use-menhir main.native 
 ```
@@ -49,6 +63,26 @@ Test it :
 ```sh 
 cat test.txt | ./main.native
 ```
+
+### Utop
+You can test your functions directly in utop by using:
+```sh 
+make test 
+```
+You can specify which library is needed and which file you are testing with the `LIB` and `TEST` flag. Example: testing 
+`playground.ml`:
+```ocaml
+playground.ml
+
+open Ast 
+open Calc
+
+let expr = EBinOp(BopAdd, EBinOp(BopMul, EVar("x"), EInt(3)), EInt(4));;
+```
+```sh 
+make test LIB="ast calc" TEST="playground"
+```
+⚠️ This doesn't work with the `main.ml` file as the compilation process is different (need for lexer/parser) ⚠️
 
 ### Debug 
 #### Debug Menhir 
