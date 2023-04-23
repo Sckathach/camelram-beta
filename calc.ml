@@ -9,7 +9,8 @@ let multiplication x y = x * y;;
 let fun_of_bop = function
     | BopAdd -> addition
     | BopSub -> subtraction
-    | BopMul -> multiplication;;
+    | BopMul -> multiplication
+    | BopPow -> pow_int;;
 
 (* Evaluate the tree, not everything is already implemented so the pattern matching is not exhaustive*)
 let rec eval = function

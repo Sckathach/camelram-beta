@@ -1,6 +1,6 @@
 open Printf
 
-type bop = BopAdd | BopSub | BopMul | BopDiv;;
+type bop = BopAdd | BopSub | BopMul | BopDiv | BopPow;;
 type uop = UnopMinus;;
 
 type expr =
@@ -10,6 +10,9 @@ type expr =
     | EIntegral of expr * expr * expr
     | ELet      of string * expr * expr
     | EVar      of string;;
+
+
+(** AFFICHAGE
 
 let pprint_bop = function
     | BopAdd -> "+"
@@ -33,3 +36,5 @@ let rec pprint_expr = function
         "ELet(" ^ x ^ ", " ^ pprint_expr e1 ^ ",\n" ^ pprint_expr e2 ^ ")"
     | EVar(x) ->
         "EVar(" ^ x ^ ")";;
+
+*)
