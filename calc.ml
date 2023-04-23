@@ -21,3 +21,4 @@ let rec vars = function
     | EInt(i) -> []
     | EVar(x) -> [x]
     | EBinOp(op, e1, e2) -> (vars e1) @ (vars e2);;
+
