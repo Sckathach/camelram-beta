@@ -1,12 +1,13 @@
 open Printf
 
-type bop = BopAdd | BopSub | BopMul | BopDiv | BopPow;;
-type uop = UnopMinus;;
+type bop = BAdd | BSub | BMul | BDiv | BPow;;
+type uop = UMinus;;
 
 type expr =
     | EInt      of int
-    | EBinOp    of bop * expr * expr
-    | EUnOp     of uop * expr
+    | EFloat    of float
+    | EBop    of bop * expr * expr
+    | EUop     of uop * expr
     | EIntegral of expr * expr * expr
     | ELet      of string * expr * expr
     | EVar      of string;;

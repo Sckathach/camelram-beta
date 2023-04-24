@@ -3,9 +3,6 @@ type value =
         | VFloat of float
 
 
-
-
-
 (** Fonction pow_int
     @returns a^b
     @type val pow_int : int -> int -> int = <fun>

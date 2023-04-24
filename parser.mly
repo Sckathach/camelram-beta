@@ -45,15 +45,15 @@ expr:
     | INTEGRAL e1 = expr "^" e2 = expr e3 = expr
         { EIntegral(e1, e2, e3) }
     | e1 = expr "+" e2 = expr
-        { EBinOp(BopAdd, e1, e2) }
+        { EBop(BAdd, e1, e2) }
     | e1 = expr "-" e2 = expr
-        { EBinOp(BopSub, e1, e2) }
+        { EBop(BSub, e1, e2) }
     | e1 = expr "*" e2 = expr
-        { EBinOp(BopMul, e1, e2) }
+        { EBop(BMul, e1, e2) }
     | e1 = expr "/" e2 = expr
-        { EBinOp(BopDiv, e1, e2) }
+        { EBop(BDiv, e1, e2) }
     | "-" e = expr %prec UMINUS
-        { EUnOp(UnopMinus, e) }
+        { EUop(UMinus, e) }
     | x = IDENT
         { EVar(x) }
     | "(" e = let_expr ")"
