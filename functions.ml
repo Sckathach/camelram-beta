@@ -1,7 +1,3 @@
-type value =
-        | VInt of int
-        | VFloat of float
-
 
 (** Fonction pow_int
     @returns a^b
