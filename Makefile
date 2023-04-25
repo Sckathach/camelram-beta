@@ -4,6 +4,7 @@ TEST = calc
 all:
 	ocamlbuild -use-menhir main.native
 	cat test.txt | ./main.native
+	sudo cp main.native /usr/local/bin/camelrambeta
 
 .SILENT:
 test:

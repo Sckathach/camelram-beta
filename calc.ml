@@ -20,3 +20,6 @@ let rec vars = function
     | EVar(x) -> [x]
     | EBop(op, e1, e2) -> (vars e1) @ (vars e2);;
 
+
+
+

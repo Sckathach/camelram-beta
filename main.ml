@@ -26,3 +26,5 @@ let main =
     in
         (* Printf.printf "%s\n" (pprint_expr res) *)
         Printf.printf "%s\n" (pprint_value (eval res))
+
+(*/usr/local/bin/*)
