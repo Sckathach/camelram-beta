@@ -4,6 +4,9 @@ TEST = calc
 all:
 	ocamlbuild -use-menhir main.native
 	cat test.txt | ./main.native
+
+path:
+	ocamlbuild -use-menhir main.native
 	sudo cp main.native /usr/local/bin/camelrambeta
 
 .SILENT:
@@ -19,4 +22,8 @@ test:
 	done
 	utop -init init_utop.ml
 	rm -f init_utop.ml
+
+.SILENT:
+clear:
+	ocamlbuild -clear
 

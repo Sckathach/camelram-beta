@@ -11,6 +11,10 @@ type expr =
     | EIntegral of expr * expr * expr
     | ELet      of string * expr * expr
     | EVar      of string
+    | EFun      of func
+and func = string * arg list * expr
+and arg =
+    | AVar      of string
 
 type value =
     | VInt      of int

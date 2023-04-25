@@ -53,6 +53,16 @@ opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
 make
 ```
 
+##### Build and create an executable on path (needs sudo)
+```sh 
+make path
+```
+
+#### Clear build files 
+``` 
+make clear
+```
+
 ### Build the project with ocamlbuild
 ~~⚠️ It seems there is an issue with the permissions, make sure to build the project on a linux partition ⚠️~~
 ```sh
@@ -64,7 +74,7 @@ Test it :
 cat test.txt | ./main.native
 ```
 
-### Utop
+### Test with Utop
 You can test your functions directly in utop by using:
 ```sh 
 make test 
