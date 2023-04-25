@@ -2,16 +2,12 @@ open Ast
 open Variable
 open Functions
 
-type value =
-    | VInt of int
-    | VFloat of float
+let addition a b = match a, b with
+    | VInt(x), VInt(y) -> VInt(x + y)
 
 (* Points to the implementation of the function *)
 let fun_of_bop = function
     | BAdd -> addition
-    | BSub -> subtraction
-    | BMul -> multiplication
-    | BPow -> pow_int;;
 
 (* Evaluate the tree, not everything is already implemented so the pattern matching is not exhaustive*)
 let rec eval = function

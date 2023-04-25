@@ -1,17 +1,24 @@
 open Printf
 
-type bop = BAdd | BSub | BMul | BDiv | BPow;;
-type uop = UMinus;;
+type bop = BAdd | BSub | BMul | BDiv | BPow
+type uop = UMinus
 
 type expr =
     | EInt      of int
     | EFloat    of float
-    | EBop    of bop * expr * expr
-    | EUop     of uop * expr
+    | EBop      of bop * expr * expr
+    | EUop      of uop * expr
     | EIntegral of expr * expr * expr
     | ELet      of string * expr * expr
-    | EVar      of string;;
+    | EVar      of string
 
+type value =
+    | VInt      of int
+    | VFloat    of float
+
+let pprint_value = function
+    | VFloat(x) -> Printf.sprintf "%f" x
+    | VInt(x) -> Printf.sprintf "%d" x
 
 (** AFFICHAGE
 

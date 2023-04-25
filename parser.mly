@@ -21,7 +21,7 @@
 
 %left "+" "-"
 %left "*" "/"
-%nonassoc POW
+%left "^"
 %nonassoc UMINUS
 
 %start main
@@ -52,6 +52,8 @@ expr:
         { EBop(BMul, e1, e2) }
     | e1 = expr "/" e2 = expr
         { EBop(BDiv, e1, e2) }
+    | e1 = expr "^" e2 = expr
+        { EBop(BPow, e1, e2) }
     | "-" e = expr %prec UMINUS
         { EUop(UMinus, e) }
     | x = IDENT

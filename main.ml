@@ -2,6 +2,14 @@ open Printf
 open Ast
 open Calc
 
+(**
+ /\_/\
+( o.o )
+ > ^ <
+
+ To protect the code from bugs
+*)
+
 (* It just reads the file in stdin and returns the AST *)
 let main =
     let lexbuf = Lexing.from_channel stdin in
@@ -17,4 +25,4 @@ let main =
             exit 1
     in
         (* Printf.printf "%s\n" (pprint_expr res) *)
-        Printf.printf "%d\n" (eval res)
+        Printf.printf "%s\n" (pprint_value (eval res))

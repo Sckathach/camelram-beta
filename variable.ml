@@ -1,8 +1,6 @@
 module Variable = struct
     open Map
-    type value =
-        | VInt of int
-        | VFloat of float
+    open Ast
 
     module Dict = Map.Make(String)
 
