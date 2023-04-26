@@ -21,6 +21,7 @@ rule token = parse
                 | "\int_" -> INTEGRAL
                 | "let" -> LET
                 | "in" -> IN
+                | "d" -> D
                 | s -> IDENT(s)
         }
     | ['=']

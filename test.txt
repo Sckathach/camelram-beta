@@ -1,6 +1,6 @@
 let a = 3 in
 
-\int_0^{pi^a}{2^(x*(x+1))}
+\int_0^{pi^a}{2^(x*(x+1))}d(x)
 
 
 

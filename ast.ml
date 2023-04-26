@@ -4,14 +4,15 @@ type bop = BAdd | BSub | BMul | BDiv | BPow
 type uop = UMinus
 
 type expr =
-    | EInt      of int
-    | EFloat    of float
-    | EBop      of bop * expr * expr
-    | EUop      of uop * expr
-    | EIntegral of expr * expr * expr
-    | ELet      of string * expr * expr
-    | EVar      of string
-    | EFun      of func
+    | EInt          of int
+    | EFloat        of float
+    | EBop          of bop * expr * expr
+    | EUop          of uop * expr
+    | EIntegral     of expr * expr * expr
+    | EIntegralD    of expr * expr * expr * expr
+    | ELet          of string * expr * expr
+    | EVar          of string
+    | EFun          of func
 and func = string * arg list * expr
 and arg =
     | AVar      of string

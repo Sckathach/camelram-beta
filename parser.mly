@@ -16,6 +16,7 @@
 %token LET
 %token IN
 %token INTEGRAL
+%token D "d"
 %token <string> IDENT
 %token EOF
 
@@ -42,6 +43,8 @@ let_expr:
 expr:
     | i = INT
         { EInt(i) }
+    | INTEGRAL e1 = expr "^" e2 = expr e3 = expr "d" e4 = expr
+        { EIntegralD(e1, e2, e3, e4) }
     | INTEGRAL e1 = expr "^" e2 = expr e3 = expr
         { EIntegral(e1, e2, e3) }
     | e1 = expr "+" e2 = expr

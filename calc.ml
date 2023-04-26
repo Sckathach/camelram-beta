@@ -64,31 +64,33 @@ let rec eval_with_args args = function
                     begin
                         match (Variable.get x) with
                             | Some(z) -> z
-                            | None -> failwith "Non"
+                            | None -> failwith "ERREUR : Variable introuvable"
                     end
         end
     | EBop(op, e1, e2) -> (fun_of_bop op) (eval_with_args args e1) (eval_with_args args e2)
     | ELet(x, value, e) -> Variable.add x (eval_with_args args value);
         eval_with_args args e
     | EIntegral(e1, e2, e3) ->
+        let dummies = seek_mute_var e3 in
+           if List.length dummies != 1 then
+                failwith "ERREUR : Il faut une variable muette pour l'intégrale"
+           else
+                eval_with_args args (EIntegralD(e1, e2, e3, EVar(List.hd dummies)))
+    | EIntegralD(e1, e2, e3, EVar(d)) ->
         let inf, sup = (force_value_to_float (eval_with_args args e1)), (force_value_to_float (eval_with_args args e2)) in
         if inf > sup then
-            eval_with_args args (EIntegral(e2, e1, e3))
+            eval_with_args args (EIntegralD(e2, e1, e3, EVar(d)))
         else
-            let dummies = seek_mute_var e3 in
-            if List.length dummies != 1 then
-                failwith "Il faut une variable muette pour l'intégrale"
-            else
-                let arg = List.hd dummies in
-                let eps = 0.01 in
-                let y = ref inf in
-                let f x = eval_with_args ((AVar(arg), VFloat(x))::args) e3 in
-                let s = ref (f inf) in
-                while !y < sup do
-                    s := Functions.add !s (f !y);
-                    y := !y +. eps
-                done;
-                VFloat ((force_value_to_float !s) *. eps)
+            let eps = 0.01 in
+            let y = ref inf in
+            let f x = eval_with_args ((AVar(d), VFloat(x))::args) e3 in
+            let s = ref (f inf) in
+            while !y < sup do
+                s := Functions.add !s (f !y);
+                y := !y +. eps
+            done;
+            VFloat ((force_value_to_float !s) *. eps)
+    | EIntegralD(_, _, _, _) -> failwith "ERREUR : Syntaxe dans l'intégrale"
 
 let eval = eval_with_args []
 
