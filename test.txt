@@ -1,6 +1,6 @@
 let a = 3 in
-let b = 2 * a in
-a ^ b
+
+\int_{0}^{pi^a}{2^(x*(x+1))}
 
 
 
