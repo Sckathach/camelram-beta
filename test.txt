@@ -1,5 +1,6 @@
-3+2
-
+let a = 3 in
+let b = 2 * a in
+a ^ b
 
 
 

@@ -8,6 +8,14 @@ let add a b =
         | VFloat(x), VInt(y) -> VFloat(float_of_int y +. x)
 ;;
 
+let sub a b =
+    match a, b with
+        | VInt(x), VFloat(y) -> VFloat(float_of_int x -. y)
+        | VInt(x), VInt(y) -> VInt(x - y)
+        | VFloat(x), VFloat(y) -> VFloat(x -. y)
+        | VFloat(x), VInt(y) -> VFloat(float_of_int y -. x)
+;;
+
 let mult a b =
     match a, b with
         | VInt(x), VFloat(y) -> VFloat(float_of_int x *. y)
