@@ -25,5 +25,5 @@ test:
 
 .SILENT:
 clear:
-	ocamlbuild -clear
+	ocamlbuild -clean
 
