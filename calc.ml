@@ -33,9 +33,9 @@ let rec eval_with_args args = function
                     end
         end
     | EBop(op, e1, e2) -> (fun_of_bop op) (eval_with_args args e1) (eval_with_args args e2)
-(*    | ELet(x, value, e) -> Variable.add x (eval_with_args value args);
-        eval_with_args e args
-*)
+    | ELet(x, value, e) -> Variable.add x (eval_with_args args value);
+        eval_with_args args e
+
 
 let eval = eval_with_args []
 
