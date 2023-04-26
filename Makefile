@@ -10,7 +10,11 @@ path:
 	sudo cp main.native /usr/local/bin/camelrambeta
 
 .SILENT:
-test:
+clear:
+	ocamlbuild -clean
+
+.SILENT:
+test: clear all
 	echo "#directory \"_build\";;" > init_utop.ml
 	for l in $(LIB) ; do \
   		ocamlc -c $$l.ml -o _build/$$l.cmo -I _build/ ; \
@@ -23,7 +27,4 @@ test:
 	utop -init init_utop.ml
 	rm -f init_utop.ml
 
-.SILENT:
-clear:
-	ocamlbuild -clean
 
