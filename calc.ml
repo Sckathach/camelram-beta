@@ -2,18 +2,11 @@ open Ast
 open Variable
 open Functions
 
-let addition a b = match a, b with
-    | VInt(x), VInt(y) -> VInt(x + y)
-
 (* Points to the implementation of the function *)
 let fun_of_bop = function
-    | BAdd -> addition
-
-(* Evaluate the tree, not everything is already implemented so the pattern matching is not exhaustive*)
-let rec eval = function
-    | EInt(i) -> VInt(i)
-    | EFloat(x) -> VFloat(x)
-    | EBop(op, e1, e2) -> (fun_of_bop op) (eval e1) (eval e2)
+    | BAdd -> Functions.add
+    | BMul -> Functions.mult
+    | BPow -> Functions.power
 
 let rec vars = function
     | EFloat(x) -> []
@@ -25,21 +18,24 @@ let rec find_arg x l = match l with
     [] -> None
     | (AVar(y), z) :: q -> if x = y then (Some z) else find_arg x q
 
-let rec eval_with_args e args = match e with
+let rec eval_with_args args = function
     | EInt(x) -> VInt(x)
     | EFloat(x) -> VFloat(x)
     | EVar(x) ->
-        let aux = function
-            | None -> failwith "Non"
-            | Some(y) -> y
-        in
-            if (List.length args) > 0 then
-                aux (find_arg x args)
-            else
-                aux (Variable.get x)
+        begin
+            match (find_arg x args) with
+                | Some(y) -> y
+                | None ->
+                    begin
+                        match (Variable.get x) with
+                            | Some(z) -> z
+                            | None -> failwith "Non"
+                    end
+        end
     | EBop(op, e1, e2) -> (fun_of_bop op) (eval_with_args e1 args) (eval_with_args e2 args)
 
-(* TESTS *)
-let test_e = EBop(BAdd, EVar "x", EVar "y")
-let test_args = [(AVar("x"), VInt(8)); (AVar("y"), VInt(1))]
+let eval = eval_with_args []
 
+(* TESTS *)
+let test_e = EBop(BPow, EInt(2), EBop(BMul, EVar("x"), EBop(BAdd, EVar "x", EVar "y")))
+let test_args = [(AVar("y"), VInt(1))]

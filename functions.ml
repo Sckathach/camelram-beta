@@ -1,6 +1,4 @@
-type value =
-        | VInt of int
-        | VFloat of float
+open Ast
 
 let add a b =
     match a, b with
