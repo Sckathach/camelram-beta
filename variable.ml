@@ -5,7 +5,7 @@ module Variable = struct
     module Dict = Map.Make(String)
 
     let variables = ref Dict.empty;;
-    variables := Dict.add "pi" (VFloat(3.14)) !variables
+    variables := Dict.add "pi" (VFloat 3.14) !variables
 
     let to_string = function
         | None -> "La variable n'existe pas."
@@ -18,7 +18,12 @@ module Variable = struct
             Not_found -> None
 
     let add_float name value =
-        variables := Dict.add name (VFloat(value)) !variables
+        variables := Dict.add name (VFloat value) !variables
     let add_int name value =
-        variables := Dict.add name (VInt(value)) !variables
+        variables := Dict.add name (VInt value) !variables
+    let add_e name value = match value with
+        | EInt(x) -> variables := Dict.add name (VInt x) !variables
+        | EFloat(x) -> variables := Dict.add name (VFloat x) !variables
+    let add name value =
+        variables := Dict.add name value !variables
 end

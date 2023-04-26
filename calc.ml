@@ -32,7 +32,10 @@ let rec eval_with_args args = function
                             | None -> failwith "Non"
                     end
         end
-    | EBop(op, e1, e2) -> (fun_of_bop op) (eval_with_args e1 args) (eval_with_args e2 args)
+    | EBop(op, e1, e2) -> (fun_of_bop op) (eval_with_args args e1) (eval_with_args args e2)
+(*    | ELet(x, value, e) -> Variable.add x (eval_with_args value args);
+        eval_with_args e args
+*)
 
 let eval = eval_with_args []
 
