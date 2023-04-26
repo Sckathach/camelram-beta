@@ -49,24 +49,23 @@ let rec find x = function
 
 let seek_mute_var expr =
     let rec aux = function
-        | EInt(x) -> [], []
-        | EFloat(x) -> [], []
         | EVar(x) ->
             begin
                 match (Variable.get x) with
-                    | Some(z) -> [], []
+                    | Some(_) -> [], []
                     | None -> [x], []
             end
-        | EBop(op, e1, e2) ->
+        | EBop(_, e1, e2) ->
             begin
                 match (aux e1), (aux e2) with
                     | (a, b), (c, d) -> a @ c, b @ d
             end
-        | ELet(x, value, e) ->
+        | ELet(x, e1, e2) ->
             begin
-                match (aux value), (aux e) with
+                match (aux e1), (aux e2) with
                     | (a, b), (c, d) -> a @ c, x :: b @ d
             end
+        | _ -> [], []
     in
     let rec aux2 l = function
         | [] -> []
