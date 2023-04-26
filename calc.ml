@@ -43,6 +43,10 @@ let eval = eval_with_args []
 let test_e = ELet("x", EInt(2), EBop(BPow, EInt(2), EBop(BMul, EVar("x"), EBop(BAdd, EVar "x", EVar "y"))))
 let test_args = [(AVar("y"), VInt(1))]
 
+let force_value_to_float = function
+    | VInt(x) -> float_of_int x
+    | VFloat(x) -> x
+
 let rec find x = function
     [] -> false
     | y :: q -> if x = y then true else find x q
@@ -67,11 +71,36 @@ let seek_mute_var expr =
             end
         | _ -> [], []
     in
-    let rec aux2 l = function
-        | [] -> []
-        | x :: q -> if find x l then aux2 q l else x :: (aux2 q l)
+    let rec aux2 acc l = function
+        | [] -> acc
+        | x :: q -> if find x l || find x acc then aux2 acc l q else aux2 (x :: acc) l q
     in
-        let a, b = aux expr in aux2 b a
+        let a, b = aux expr in (aux2 [] b a)
+
+
+(* Bornes en float *)
+let rec integral inf sup e =
+    if inf > sup then
+        integral sup inf e
+    else
+    let args = seek_mute_var e in
+    if List.length args != 1 then
+        failwith "Il faut une variable muette pour l'intégrale"
+    else
+        let arg = List.hd args in
+        let eps = 0.01 in
+        let y = ref inf in
+        let f x = eval_with_args [(AVar(arg), VFloat(x))] e in
+        let s = ref (f inf) in
+        while !y < sup do
+            s := Functions.add !s (f !y);
+            y := !y +. eps
+        done;
+        (force_value_to_float !s) *. eps
+
+
+
+
 
 
 

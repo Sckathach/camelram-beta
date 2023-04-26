@@ -16,6 +16,7 @@ and func = string * arg list * expr
 and arg =
     | AVar      of string
 
+(* Achtung force_value_to_float*)
 type value =
     | VInt      of int
     | VFloat    of float
