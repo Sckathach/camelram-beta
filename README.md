@@ -9,7 +9,8 @@ This compiler aims to compile parts of LaTeX. There are already :
 - local variables : `let x = 2^64 in`
 
 Examples:
-$$ \displaystyle{\log(e^2)^3-2^{pi}} $$
+
+$$ \displaystyle{\log(e^2)^3-2^{\pi}} $$
 ```sh 
 ./exec "\log(\exp(2))^3-2^(pi)" 
 > -0.824978
