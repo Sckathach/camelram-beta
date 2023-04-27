@@ -2,7 +2,11 @@ open Ast
 open Variable
 open Functions
 
-(* Points to the implementation of the function *)
+(**
+    FUNCTION fun_of_bop
+    @type val fun_of_bop : bop -> value -> value -> value = <fun>
+    @returns The function (val fun : value -> value -> value) found in functions.ml
+*)
 let fun_of_bop = function
     | BAdd -> Functions.add
     | BSub -> Functions.sub
@@ -10,6 +14,11 @@ let fun_of_bop = function
     | BDiv -> Functions.div
     | BPow -> Functions.power
 
+(**
+    FUNCTION fun_of_uop
+    @type val fun_of_uop : uop -> value -> value = <fun>
+    @returns The function (val fun : value -> value) found in functions.ml
+*)
 let fun_of_uop = function
     | UMinus -> Functions.minus
     | UExp -> Functions.exp
@@ -28,21 +37,45 @@ let fun_of_uop = function
     | URound -> Functions.round
     | UTrunc -> Functions.trunc
 
+(**
+    FUNCTION vars
+    @type vars : expr -> string list = <fun>
+    @returns A list of the variables in the expression
+*)
 let rec vars = function
     | EFloat(x) -> []
     | EInt(i) -> []
     | EVar(x) -> [x]
     | EBop(op, e1, e2) -> (vars e1) @ (vars e2)
 
+(**
+    FUNCTION find_args
+    @type val find_args : string -> (arg * 'a) list -> 'a option = <fun>
+    @returns The value of the variable x if x is in the list l. l is a (arg * 'a) list, it is used to store dummy
+        variables
+*)
 let rec find_arg x l = match l with
     [] -> None
     | (AVar(y), z) :: q -> if x = y then (Some z) else find_arg x q
 
+(**
+    FUNCTION find
+    @requires Two arguments, x and a list
+    @type val find : 'a -> 'a list -> bool = <fun>
+    @returns True if x is in the list, false if not
+*)
 let rec find x = function
     [] -> false
     | y :: q -> if x = y then true else find x q
 
+(**
+    FUNCTION seek_mute_var
+    @type val seek_mute_var : expr -> string list = <fun>
+    @returns A list of the name of the variables that aren't in the dictionary (variables initialised with let)
+*)
 let seek_mute_var expr =
+    (* aux seeks all the variables, variables alone in a list and let variables in another list (let variables are not
+        yet in the dictionary but they aren't dummy variables) *)
     let rec aux = function
         | EVar(x) ->
             begin
@@ -63,6 +96,7 @@ let seek_mute_var expr =
             end
         | _ -> [], []
     in
+    (* aux2 removes the ones in both lists *)
     let rec aux2 acc l = function
         | [] -> acc
         | x :: q -> if find x l || find x acc then aux2 acc l q else aux2 (x :: acc) l q

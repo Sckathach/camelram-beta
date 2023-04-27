@@ -10,7 +10,12 @@ open Calc
  To protect the code from bugs
 *)
 
-(* It just reads the file in stdin and returns the AST *)
+(**
+    FUNCTION main
+    @requires File in stdin
+    @type val main : unit -> unit = <fun>
+    @returns Evaluation of the LaTeX string in stdin
+*)
 let main =
     let lexbuf = Lexing.from_channel stdin in
     let res =
@@ -26,5 +31,3 @@ let main =
     in
         (* Printf.printf "%s\n" (pprint_expr res) *)
         Printf.printf "%s\n" (pprint_value (eval res))
-
-(*/usr/local/bin/*)
