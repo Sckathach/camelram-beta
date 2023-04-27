@@ -6,7 +6,7 @@
 let letter = ['A'-'Z'] | ['a'-'z']
 let digit = ['0'-'9']
 let non_digit = ['_' '\\'] | letter
-let ident = non_digit (digit | non_digit)*
+let ident = non_digit+
 
 let line_comment = "//" [^ '\n']*
 
@@ -21,6 +21,22 @@ rule token = parse
                 | "\int_" -> INTEGRAL
                 | "let" -> LET
                 | "in" -> IN
+                | "d" -> D
+                | "\exp" -> EXP
+                | "\log" -> LOG
+                | "\cos" -> COS
+                | "\sin" -> SIN
+                | "\tan" -> TAN
+                | "\acos" -> ACOS
+                | "\asin" -> ASIN
+                | "\atan" -> ATAN
+                | "\cosh" -> COSH
+                | "\sinh" -> SINH
+                | "\tanh" -> TANH
+                | "\ceil" -> CEIL
+                | "\floor" -> FLOOR
+                | "\round" -> ROUND
+                | "\trunc" -> TRUNC
                 | s -> IDENT(s)
         }
     | ['=']

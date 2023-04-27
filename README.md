@@ -2,8 +2,24 @@
 
 ## Intro ##
 This compiler aims to compile parts of LaTeX. There are already : 
-- basic operations on integers : `+ - *`
-- approximation of integrals (soon) : `\int`
+- basic operations on integers/floats : `+ - * / ^`
+- basic operations on floats : `\exp, \log, \cos,\sin, \tan, \acos, \asin, \atan, \cosh, \sinh, \tanh, \ceil, \floor, 
+\round, \trunc`
+- approximation of integrals : `\int`
+- local variables : `let x = 2^64 in`
+
+Examples:
+
+$$ \displaystyle{\log(e^2)^3-2^{\pi}} $$
+```sh 
+camelrambeta "\log(\exp(2))^3-2^(pi)" 
+> -0.824978
+```
+$$\displaystyle{\int_0^{\displaystyle{\frac{1}{\pi}\int_{-\infty}^{+\infty}{\frac{sin(x)}{x}}dx}}{\int_{y+1}^0{\frac{1-e^{zy}}{z}}dz}dy}$$
+```sh 
+ camelrambeta "let a = \int_{-1*inf}^{inf}{\sin(x)/x}/pi in \int_0^a{\int_{y+1}^0{(1-\exp(z*y))/z}d(z)}d(y)"   
+> 1.228285
+```
 
 See the to-do list in the [issues](https://github.com/Camelram-Beta/compiler/issues).
 
@@ -14,15 +30,16 @@ tool [Dune](https://dune.build/) (instead of [ocamlbuild](https://github.com/oca
 
 ## Use ##
 
-When compiled with make, it can be used simply with `exec` : 
+When compiled with `make path`, it can be used simply with `camelrambeta` : 
 ```shell
-./exec "3+2"
+camelrambeta "3+2"
+> 5 
 ```
-For now, the program only takes an argument and evaluate it.
 
-Or by piping to `main.native` : 
+When compiled with `make` or `make path` arguments can be piped into `main.native` : 
 ```shell
 echo "3+2" | ./main.native 
+> 5
 ```
 
 
@@ -48,23 +65,22 @@ eval $(opam env)
 opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
 ```
 ### Build with make
-~~⚠️ It seems there is an issue with the permissions, make sure to build the project on a linux partition ⚠️~~
 ```sh 
 make
 ```
 
 ##### Build and create an executable on path (needs sudo)
+This will create the executable `camelrambeta` in `/usr/local/bin/`:
 ```sh 
 make path
 ```
 
-#### Clear build files 
+#### Clear build files
 ``` 
 make clear
 ```
 
 ### Build the project with ocamlbuild
-~~⚠️ It seems there is an issue with the permissions, make sure to build the project on a linux partition ⚠️~~
 ```sh
 ocamlbuild -use-menhir main.native 
 ```

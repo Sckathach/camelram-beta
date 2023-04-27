@@ -1,24 +1,32 @@
 open Printf
 
 type bop = BAdd | BSub | BMul | BDiv | BPow
-type uop = UMinus
+type uop =  UMinus | UExp | ULog | UCos | USin | UTan
+            | UAcos | UAsin | UAtan | UCosh | USinh | UTanh
+            | UCeil | UFloor | URound | UTrunc
 
 type expr =
-    | EInt      of int
-    | EFloat    of float
-    | EBop      of bop * expr * expr
-    | EUop      of uop * expr
-    | EIntegral of expr * expr * expr
-    | ELet      of string * expr * expr
-    | EVar      of string
-    | EFun      of func
+    | EInt          of int
+    | EFloat        of float
+    | EBop          of bop * expr * expr
+    | EUop          of uop * expr
+    | EIntegral     of expr * expr * expr
+    | EIntegralD    of expr * expr * expr * expr
+    | ELet          of string * expr * expr
+    | EVar          of string
+    | EFun          of func
 and func = string * arg list * expr
 and arg =
     | AVar      of string
 
+(* Achtung force_value_to_float*)
 type value =
     | VInt      of int
     | VFloat    of float
+
+let force_value_to_float = function
+    | VInt(x) -> float_of_int x
+    | VFloat(x) -> x
 
 let pprint_value = function
     | VFloat(x) -> Printf.sprintf "%f" x

@@ -7,7 +7,8 @@ all:
 
 path:
 	ocamlbuild -use-menhir main.native
-	sudo cp main.native /usr/local/bin/camelrambeta
+	sudo cp main.native /usr/local/bin/camelrambeta_pipe
+	sudo cp exec_camelrambeta /usr/local/bin/camelrambeta
 
 .SILENT:
 clear:
