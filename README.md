@@ -2,8 +2,23 @@
 
 ## Intro ##
 This compiler aims to compile parts of LaTeX. There are already : 
-- basic operations on integers : `+ - *`
-- approximation of integrals (soon) : `\int`
+- basic operations on integers/floats : `+ - * / ^`
+- basic operations on floats : `\exp, \log, \cos,\sin, \tan, \acos, \asin, \atan, \cosh, \sinh, \tanh, \ceil, \floor, 
+\round, \trunc`
+- approximation of integrals : `\int`
+- local variables : `let x = 2^64 in`
+
+Examples:
+$$ \displaystyle{\log(e^2)^3-2^{pi}} $$
+```sh 
+./exec "\log(\exp(2))^3-2^(pi)" 
+> -0.824978
+```
+$$\displaystyle{\int_0^{\displaystyle{\frac{1}{\pi}\int_{-\infty}^{+\infty}{\frac{sin(x)}{x}}dx}}{\int_{y+1}^0{\frac{1-e^{zy}}{z}}dz}dy}$$
+```sh 
+ ./exec "let a = \int_{-1*inf}^{inf}{\sin(x)/x}/pi in \int_0^a{\int_{y+1}^0{(1-\exp(z*y))/z}d(z)}d(y)"   
+> 1.228285
+```
 
 See the to-do list in the [issues](https://github.com/Camelram-Beta/compiler/issues).
 
