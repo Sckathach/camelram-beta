@@ -1,7 +1,9 @@
 open Printf
 
 type bop = BAdd | BSub | BMul | BDiv | BPow
-type uop = UMinus
+type uop =  UMinus | UExp | ULog | UCos | USin | UTan
+            | UAcos | UAsin | UAtan | UCosh | USinh | UTanh
+            | UCeil | UFloor | URound | UTrunc
 
 type expr =
     | EInt          of int
@@ -21,6 +23,10 @@ and arg =
 type value =
     | VInt      of int
     | VFloat    of float
+
+let force_value_to_float = function
+    | VInt(x) -> float_of_int x
+    | VFloat(x) -> x
 
 let pprint_value = function
     | VFloat(x) -> Printf.sprintf "%f" x

@@ -19,11 +19,26 @@
 %token D "d"
 %token <string> IDENT
 %token EOF
+%token EXP
+%token LOG
+%token COS
+%token SIN
+%token TAN
+%token ACOS
+%token ASIN
+%token ATAN
+%token COSH
+%token SINH
+%token TANH
+%token CEIL
+%token FLOOR
+%token ROUND
+%token TRUNC
 
 %left "+" "-"
 %left "*" "/"
 %left "^"
-%nonassoc UMINUS
+%nonassoc UMINUS, EXP, LOG, COS, SIN, TAN, ACOS, ASIN, ATAN, COSH, SINH, TANH, CEIL, FLOOR, ROUND, TRUNC
 
 %start main
 %type <expr> main
@@ -59,6 +74,36 @@ expr:
         { EBop(BPow, e1, e2) }
     | "-" e = expr %prec UMINUS
         { EUop(UMinus, e) }
+    | EXP e = expr %prec EXP
+        { EUop(UExp, e) }
+    | LOG e = expr %prec LOG
+        { EUop(ULog, e) }
+    | COS e = expr %prec COS
+        { EUop(UCos, e) }
+    | SIN e = expr %prec SIN
+        { EUop(USin, e) }
+    | TAN e = expr %prec TAN
+        { EUop(UTan, e) }
+    | ACOS e = expr %prec ACOS
+        { EUop(UAcos, e) }
+    | ASIN e = expr %prec ASIN
+        { EUop(UAsin, e) }
+   | ATAN e = expr %prec ATAN
+        { EUop(UAtan, e) }
+    | COSH e = expr %prec COSH
+        { EUop(UCosh, e) }
+    | SINH e = expr %prec SINH
+        { EUop(USinh, e) }
+    | TANH e = expr %prec TANH
+        { EUop(UTanh, e) }
+    | CEIL e = expr %prec CEIL
+        { EUop(UCeil, e) }
+    | FLOOR e = expr %prec FLOOR
+        { EUop(UFloor, e) }
+    | ROUND e = expr %prec ROUND
+        { EUop(URound, e) }
+    | TRUNC e = expr %prec TRUNC
+        { EUop(UTrunc, e) }
     | x = IDENT
         { EVar(x) }
     | "(" e = let_expr ")"

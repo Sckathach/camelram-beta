@@ -22,6 +22,21 @@ rule token = parse
                 | "let" -> LET
                 | "in" -> IN
                 | "d" -> D
+                | "\exp" -> EXP
+                | "\log" -> LOG
+                | "\cos" -> COS
+                | "\sin" -> SIN
+                | "\tan" -> TAN
+                | "\acos" -> ACOS
+                | "\asin" -> ASIN
+                | "\atan" -> ATAN
+                | "\cosh" -> COSH
+                | "\sinh" -> SINH
+                | "\tanh" -> TANH
+                | "\ceil" -> CEIL
+                | "\floor" -> FLOOR
+                | "\round" -> ROUND
+                | "\trunc" -> TRUNC
                 | s -> IDENT(s)
         }
     | ['=']

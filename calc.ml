@@ -7,7 +7,26 @@ let fun_of_bop = function
     | BAdd -> Functions.add
     | BSub -> Functions.sub
     | BMul -> Functions.mult
+    | BDiv -> Functions.div
     | BPow -> Functions.power
+
+let fun_of_uop = function
+    | UMinus -> Functions.minus
+    | UExp -> Functions.exp
+    | ULog -> Functions.log
+    | UCos -> Functions.cos
+    | USin -> Functions.sin
+    | UTan -> Functions.tan
+    | UAcos -> Functions.acos
+    | UAsin -> Functions.asin
+    | UAtan -> Functions.atan
+    | UCosh -> Functions.cosh
+    | USinh -> Functions.sinh
+    | UTanh -> Functions.tanh
+    | UCeil -> Functions.ceil
+    | UFloor -> Functions.floor
+    | URound -> Functions.round
+    | UTrunc -> Functions.trunc
 
 let rec vars = function
     | EFloat(x) -> []
@@ -18,10 +37,6 @@ let rec vars = function
 let rec find_arg x l = match l with
     [] -> None
     | (AVar(y), z) :: q -> if x = y then (Some z) else find_arg x q
-
-let force_value_to_float = function
-    | VInt(x) -> float_of_int x
-    | VFloat(x) -> x
 
 let rec find x = function
     [] -> false
@@ -40,6 +55,7 @@ let seek_mute_var expr =
                 match (aux e1), (aux e2) with
                     | (a, b), (c, d) -> a @ c, b @ d
             end
+        | EUop(_, e) -> aux e
         | ELet(x, e1, e2) ->
             begin
                 match (aux e1), (aux e2) with
@@ -68,6 +84,7 @@ let rec eval_with_args args = function
                     end
         end
     | EBop(op, e1, e2) -> (fun_of_bop op) (eval_with_args args e1) (eval_with_args args e2)
+    | EUop(op, e) -> (fun_of_uop op) (eval_with_args args e)
     | ELet(x, value, e) -> Variable.add x (eval_with_args args value);
         eval_with_args args e
     | EIntegral(e1, e2, e3) ->
@@ -79,7 +96,16 @@ let rec eval_with_args args = function
     | EIntegralD(e1, e2, e3, EVar(d)) ->
         let inf, sup = (force_value_to_float (eval_with_args args e1)), (force_value_to_float (eval_with_args args e2)) in
         if inf > sup then
-            eval_with_args args (EIntegralD(e2, e1, e3, EVar(d)))
+            eval_with_args args (EUop(UMinus, EIntegralD(e2, e1, e3, EVar(d))))
+        else
+        if inf = 0. then
+            eval_with_args args (EIntegralD(EFloat(Float.epsilon), e2, e3, EVar(d)))
+        else
+        if sup = Float.infinity then
+           eval_with_args args (EIntegralD(EFloat(inf), EFloat(10000.), e3, EVar(d)))
+        else
+        if inf = Float.neg_infinity then
+            eval_with_args args (EIntegralD(EFloat(-10000.), EFloat(sup), e3, EVar(d)))
         else
             let eps = 0.01 in
             let y = ref inf in
