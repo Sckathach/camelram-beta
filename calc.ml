@@ -108,6 +108,7 @@ let seek_mute_var expr =
     @requires All the variables need to be either stored globally with the syntax let x in or locally in the (arg *
     value) list
     @raises Not_Found if a variable is unknown
+    @returns The numerical evaluation of the expression if everything is known
     @example An expr tree : ELet("x", EInt(2), EBop(BPow, EInt(2), EBop(BMul, EVar("x"), EBop(BAdd, EVar "x",
      EVar "y")))), a (arg * value) list : [(AVar("y"), VInt(1))], here "x" is stored globally
 *)
@@ -168,7 +169,31 @@ let test_args = [(AVar("y"), VInt(1))]
 
 
 
+(**
+    FUNCTION replace_var
+    @type val replace_var : string -> expr -> expr
+    @raises failwith if the replacement expression provided has zero or more than one dummy variable
+    @return The expression where the variable given as a string argument is replaced by the expression containing the
+        new variable
+*)
 
+let replace_var var rep expr =
+    let rec aux a b c = function
+        | EVar(a) -> c
+        | EInt(x) -> EInt(x)
+        | EFloat(x) -> EFloat(x)
+        | EUop(x, e) -> EUop(x, aux a b c e)
+        | EBop(x, e1, e2) -> EBop(x, aux a b c e1, aux a b c e2)
+        | ELet(x, e1, e2) -> if x = a then ELet(b, aux a b c e1, aux a b c e2)
+            else ELet(x, aux a b c e1, aux a b c e2)
+        | EIntegral(e1, e2, e3) -> EIntegral(aux a b c e1, aux a b c e2, aux a b c e3)
+        | EIntegralD(e1, e2, e3, e4) -> EIntegralD(aux a b c e1, aux a b c e2, aux a b c e3, aux a b c e4)
+    in
+        let l = (seek_mute_var rep) in
+            if List.length l > 1 || List.length l = 0 then
+                failwith "ERREUR : mauvais argument dans replace_var"
+            else
+                aux var (List.hd l) rep expr
 
 
 

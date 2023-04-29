@@ -26,7 +26,7 @@ let mult a b =
 
 (**
     FUNCTION div
-    @type val div : value -> value -> value
+    @type val div : value -> value -> value = <fun>
     @requires FUNCTION mult
     @raises failwith if division by 0
 *)
@@ -41,7 +41,7 @@ let div a b =
 
 (**
     FUNCTION minus
-    @type value -> value
+    @type val minus : value -> value = <fun>
     @requires FUNCTION mult
 *)
 let minus a = mult (VInt(-1)) a;;
