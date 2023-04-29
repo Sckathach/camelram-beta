@@ -103,6 +103,14 @@ let seek_mute_var expr =
     in
         let a, b = aux expr in (aux2 [] b a)
 
+(** FUNCTION eval_with_args
+    @type val eval_with_args : (arg * value) list -> expr -> value = <fun>
+    @requires All the variables need to be either stored globally with the syntax let x in or locally in the (arg *
+    value) list
+    @raises Not_Found if a variable is unknown
+    @example An expr tree : ELet("x", EInt(2), EBop(BPow, EInt(2), EBop(BMul, EVar("x"), EBop(BAdd, EVar "x",
+     EVar "y")))), a (arg * value) list : [(AVar("y"), VInt(1))], here "x" is stored globally
+*)
 let rec eval_with_args args = function
     | EInt(x) -> VInt(x)
     | EFloat(x) -> VFloat(x)

@@ -24,6 +24,12 @@ let mult a b =
         | VFloat(x), VInt(y) -> VFloat(float_of_int y *. x)
 ;;
 
+(**
+    FUNCTION div
+    @type val div : value -> value -> value
+    @requires FUNCTION mult
+    @raises failwith if division by 0
+*)
 let div a b =
     match a, b with
         | _, VFloat(0.)
@@ -32,8 +38,19 @@ let div a b =
         | x, VInt(y) -> mult x (VFloat(1. /. (float_of_int y)))
 ;;
 
+
+(**
+    FUNCTION minus
+    @type value -> value
+    @requires FUNCTION mult
+*)
 let minus a = mult (VInt(-1)) a;;
 
+(**
+    FUNCTIONS
+    @type val function : value -> value = <fun>
+    It's an adaptation to the value type of the usual functions in the Float module of OCaml
+*)
 let exp a = VFloat(Float.exp (force_value_to_float a));;
 let log a = VFloat(Float.log (force_value_to_float a));;
 let cos a = VFloat(Float.cos (force_value_to_float a));;
