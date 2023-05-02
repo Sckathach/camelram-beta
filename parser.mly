@@ -36,6 +36,7 @@
 %token TRUNC
 %token INFTY
 %token PI
+%token FRAC
 
 %left "+" "-"
 %left "*" "/"
@@ -64,6 +65,8 @@ expr:
         { EIntegralD(e1, e2, e3, e4) }
     | INTEGRAL e1 = expr "^" e2 = expr e3 = expr
         { EIntegral(e1, e2, e3) }
+    | FRAC e1 = expr e2 = expr
+        { EBop(BDiv, e1, e2) }
     | e1 = expr "+" e2 = expr
         { EBop(BAdd, e1, e2) }
     | e1 = expr "-" e2 = expr

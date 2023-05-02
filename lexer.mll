@@ -39,6 +39,7 @@ rule token = parse
                 | "\trunc" -> TRUNC
                 | "\infty" -> INFTY
                 | "\pi" -> PI
+                | "\frac" -> FRAC
                 | s -> IDENT(s)
         }
     | ['=']
