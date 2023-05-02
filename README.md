@@ -12,12 +12,12 @@ Examples:
 
 $$ \displaystyle{\log(e^2)^3-2^{\pi}} $$
 ```sh 
-camelrambeta "\log(\exp(2))^3-2^(pi)" 
+camelrambeta "\log(\exp(2))^3-2^(\pi)" 
 > -0.824978
 ```
 $$\displaystyle{\int_0^{\displaystyle{\frac{1}{\pi}\int_{-\infty}^{+\infty}{\frac{sin(x)}{x}}dx}}{\int_{y+1}^0{\frac{1-e^{zy}}{z}}dz}dy}$$
 ```sh 
- camelrambeta "let a = \int_{-1*inf}^{inf}{\sin(x)/x}/pi in \int_0^a{\int_{y+1}^0{(1-\exp(z*y))/z}d(z)}d(y)"   
+ camelrambeta "let a = \int_{-\infty}^{\infty}{\sin(x)/x}/\pi in \int_0^a{\int_{y+1}^0{(1-\exp(z*y))/z}d(z)}d(y)"   
 > 1.228285
 ```
 
