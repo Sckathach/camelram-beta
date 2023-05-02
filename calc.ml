@@ -1,41 +1,41 @@
 open Ast
 open Variable
-open Functions
+open General
 
 (**
     FUNCTION fun_of_bop
     @type val fun_of_bop : bop -> value -> value -> value = <fun>
-    @returns The function (val fun : value -> value -> value) found in functions.ml
+    @returns The function (val fun : value -> value -> value) found in general.ml
 *)
 let fun_of_bop = function
-    | BAdd -> Functions.add
-    | BSub -> Functions.sub
-    | BMul -> Functions.mult
-    | BDiv -> Functions.div
-    | BPow -> Functions.power
+    | BAdd -> General.add
+    | BSub -> General.sub
+    | BMul -> General.mult
+    | BDiv -> General.div
+    | BPow -> General.power
 
 (**
     FUNCTION fun_of_uop
     @type val fun_of_uop : uop -> value -> value = <fun>
-    @returns The function (val fun : value -> value) found in functions.ml
+    @returns The function (val fun : value -> value) found in general.ml
 *)
 let fun_of_uop = function
-    | UMinus -> Functions.minus
-    | UExp -> Functions.exp
-    | ULog -> Functions.log
-    | UCos -> Functions.cos
-    | USin -> Functions.sin
-    | UTan -> Functions.tan
-    | UAcos -> Functions.acos
-    | UAsin -> Functions.asin
-    | UAtan -> Functions.atan
-    | UCosh -> Functions.cosh
-    | USinh -> Functions.sinh
-    | UTanh -> Functions.tanh
-    | UCeil -> Functions.ceil
-    | UFloor -> Functions.floor
-    | URound -> Functions.round
-    | UTrunc -> Functions.trunc
+    | UMinus -> General.minus
+    | UExp -> General.exp
+    | ULog -> General.log
+    | UCos -> General.cos
+    | USin -> General.sin
+    | UTan -> General.tan
+    | UAcos -> General.acos
+    | UAsin -> General.asin
+    | UAtan -> General.atan
+    | UCosh -> General.cosh
+    | USinh -> General.sinh
+    | UTanh -> General.tanh
+    | UCeil -> General.ceil
+    | UFloor -> General.floor
+    | URound -> General.round
+    | UTrunc -> General.trunc
 
 (**
     FUNCTION vars
@@ -155,7 +155,7 @@ let rec eval_with_args args = function
             let f x = eval_with_args ((AVar(d), VFloat(x))::args) e3 in
             let s = ref (f inf) in
             while !y < sup do
-                s := Functions.add !s (f !y);
+                s := General.add !s (f !y);
                 y := !y +. eps
             done;
             VFloat ((force_value_to_float !s) *. eps)
@@ -176,7 +176,6 @@ let test_args = [(AVar("y"), VInt(1))]
     @return The expression where the variable given as a string argument is replaced by the expression containing the
         new variable
 *)
-
 let replace_var var rep expr =
     let rec aux a b c = function
         | EVar(a) -> c
