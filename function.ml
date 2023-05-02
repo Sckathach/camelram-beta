@@ -6,8 +6,8 @@ module Function = struct
 
     let functions = ref DictFunc.empty
 
-    let add name list expr =
-        functions := DictFunc.add name (list, expr) !functions
+    let add name args expr =
+        functions := DictFunc.add name (EFun(name, args, expr)) !functions
     let get name =
         try Some(DictFunc.find name !functions) with
             Not_found -> None

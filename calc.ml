@@ -1,6 +1,7 @@
 open Ast
 open Variable
 open General
+open Function
 
 (**
     FUNCTION fun_of_bop
@@ -163,16 +164,38 @@ let rec eval_with_args args = function
 
 let eval = eval_with_args []
 
+
+(**
+    FUNCTION eval_function
+    @type val eval_function : expr -> value list -> value = <fun>
+    @raises Invalid_argument if the given arg list doesn't have the required length
+    @example Eval f(2, 1) -> eval_function f [VInt 2; VInt 1];;
+*)
+let eval_function f args = match f with
+    EFun(_, vars, e) -> eval_with_args (List.combine vars args) e
+
+
+(**
+    FUNCTION eval_function_by_name
+    @type val eval_function_by_name : string -> value list -> value = <fun>
+    @raises Failure if the function doesn't exist
+    @example Eval f(2, 1) -> eval_function_by_name "f" [VInt 2; VInt 1];;
+*)
+let eval_function_by_name f args = match Function.get f with
+    | Some(x) -> eval_function x args
+    | None -> failwith "ERREUR : La fonction n'existe pas"
+
+
 (* TESTS *)
 let test_e = ELet("x", EInt(2), EBop(BPow, EInt(2), EBop(BMul, EVar("x"), EBop(BAdd, EVar "x", EVar "y"))))
 let test_args = [(AVar("y"), VInt(1))]
-
+let test_f = EFun("f", [AVar "x"; AVar "y"], EBop(BAdd, EVar "x", EVar "y"))
 
 
 (**
     FUNCTION replace_var
     @type val replace_var : string -> expr -> expr
-    @raises failwith if the replacement expression provided has zero or more than one dummy variable
+    @raises Failure if the replacement expression provided has zero or more than one dummy variable
     @return The expression where the variable given as a string argument is replaced by the expression containing the
         new variable
 *)
@@ -193,8 +216,6 @@ let replace_var var rep expr =
                 failwith "ERREUR : mauvais argument dans replace_var"
             else
                 aux var (List.hd l) rep expr
-
-
 
 
 
