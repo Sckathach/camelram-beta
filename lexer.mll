@@ -37,6 +37,8 @@ rule token = parse
                 | "\floor" -> FLOOR
                 | "\round" -> ROUND
                 | "\trunc" -> TRUNC
+                | "\infty" -> INFTY
+                | "\pi" -> PI
                 | s -> IDENT(s)
         }
     | ['=']

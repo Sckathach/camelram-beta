@@ -7,7 +7,7 @@ module Variable = struct
     let variables = ref Dict.empty;;
     variables := Dict.add "pi" (VFloat (Float.pi)) !variables;;
     variables := Dict.add "eps" (VFloat (Float.epsilon)) !variables;;
-    variables := Dict.add "inf" (VFloat (Float.infinity)) !variables
+    variables := Dict.add "infty" (VFloat (Float.infinity)) !variables
 
     let to_string = function
         | None -> "La variable n'existe pas."

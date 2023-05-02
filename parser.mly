@@ -34,6 +34,8 @@
 %token FLOOR
 %token ROUND
 %token TRUNC
+%token INFTY
+%token PI
 
 %left "+" "-"
 %left "*" "/"
@@ -106,6 +108,10 @@ expr:
         { EUop(UTrunc, e) }
     | x = IDENT
         { EVar(x) }
+    | x = INFTY
+        { EVar("infty") }
+    | x = PI
+        { EVar("pi") }
     | "(" e = let_expr ")"
         { e }
     | "{" e = let_expr "}"
