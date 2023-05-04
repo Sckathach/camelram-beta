@@ -99,7 +99,7 @@ Create unit tests in tests.ml:
 ```ocaml
 let tests = [
     test (vars (EBop(BAdd, EVar "x", EInt 3))) ["x"];
-    test (ceil 3.14) 3
+    test (ceil (VFloat 3.14)) (VFloat 3.)
 ]
 ```
 
