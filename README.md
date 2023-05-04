@@ -90,6 +90,19 @@ Test it :
 cat test.txt | ./main.native
 ```
 
+### Run unit tests
+```sh
+make unit
+```
+
+Create unit tests in tests.ml:
+```ocaml
+let tests = [
+    test (vars (EBop(BAdd, EVar "x", EInt 3))) ["x"];
+    test (ceil 3.14) 3
+]
+```
+
 ### Test with Utop
 You can test your functions directly in utop by using:
 ```sh 

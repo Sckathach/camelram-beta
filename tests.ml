@@ -16,7 +16,7 @@ let test x y i = test_message x y " " i;;
 let tests = [
     test (vars (EBop(BAdd, EVar "x", EInt 3))) ["x"];
     test 3 2;
-    test 4 4;
+    test (floor (VFloat 3.14)) (VFloat 3.);
     test_message 3 4 "C loupé";
     test_message 3 3 "Ce message ne s'affichera pas uwWU"
 ]
