@@ -28,4 +28,16 @@ test: clear all
 	utop -init init_utop.ml
 	rm -f init_utop.ml
 
+unit:
+	ocamlbuild -use-menhir main.native > /dev/null
+	ocamlbuild -clean > /dev/null
+	ocamlbuild tests.native > /dev/null
+ifneq ("$(wildcard $(tests.native))", "")
+	@echo "ERREUR : ocamlbuild n'a pas réussi à compiler tests, essayez 'make test LIB=\"ast variable function general calc\" TEST=tests'"
+else
+	./tests.native
+	rm tests.native
+endif
+
+
 
