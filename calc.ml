@@ -217,5 +217,28 @@ let replace_var var rep expr =
             else
                 aux var (List.hd l) rep expr
 
+let list_of_string s =
+    let rec aux i l =
+        if i < 0 then l else aux (i - 1) ((String.make 1 s.[i]) :: l) in
+    aux (String.length s - 1) []
 
-
+let rec split_var = function
+    | EVar(a) ->
+        begin
+            match Variable.get a with
+                | None ->
+                    begin
+                        let rec aux = function
+                            | [x] -> EVar x
+                            | x :: q -> EBop(BMul, EVar x, aux q)
+                        in aux (list_of_string a)
+                    end
+                | Some(x) -> EVar(a)
+        end
+    | EInt(x) -> EInt(x)
+    | EFloat(x) -> EFloat(x)
+    | EUop(x, e) -> EUop(x, split_var e)
+    | EBop(x, e1, e2) -> EBop(x, split_var e1, split_var e2)
+    | ELet(x, e1, e2) -> ELet(x, split_var e1, split_var e2)
+    | EIntegral(e1, e2, e3) -> EIntegral(split_var e1, split_var e2, split_var e3)
+    | EIntegralD(e1, e2, e3, e4) -> EIntegralD(split_var e1, split_var e2, split_var e3, e4)

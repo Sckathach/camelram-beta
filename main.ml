@@ -30,4 +30,4 @@ let main =
             exit 1
     in
         (* Printf.printf "%s\n" (pprint_expr res) *)
-        Printf.printf "%s\n" (pprint_value (eval res))
+        Printf.printf "%s\n" (pprint_value (eval (split_var res)))

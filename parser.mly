@@ -77,6 +77,8 @@ expr:
         { EBop(BSub, e1, e2) }
     | e1 = expr "*" e2 = expr
         { EBop(BMul, e1, e2) }
+    | e1 = expr e2 = expr
+        { EBop(BMul, e1, e2) }
     | e1 = expr "/" e2 = expr
         { EBop(BDiv, e1, e2) }
     | e1 = expr "^" e2 = expr
