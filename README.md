@@ -1,7 +1,7 @@
 # Camelram Bêta Compiler #
 
 ## Intro ##
-This compiler aims to compile parts of LaTeX. There are already : 
+This compiler aims to compile parts of LaTeX. There is already : 
 - basic operations on integers/floats : `+ - * / ^`
 - basic operations on floats : `\exp, \log, \cos,\sin, \tan, \acos, \asin, \atan, \cosh, \sinh, \tanh, \ceil, \floor, 
 \round, \trunc`
@@ -99,7 +99,7 @@ Create unit tests in tests.ml:
 ```ocaml
 let tests = [
     test (vars (EBop(BAdd, EVar "x", EInt 3))) ["x"];
-    test (ceil 3.14) 3
+    test (ceil (VFloat 3.14)) (VFloat 3.)
 ]
 ```
 
