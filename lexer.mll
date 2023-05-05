@@ -64,6 +64,8 @@ rule token = parse
         { LCBRA }
     | ['}']
         { RCBRA }
+    | ['.']
+        { DOT }
     | eof
         { EOF }
     | _ as c

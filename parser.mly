@@ -13,6 +13,7 @@
 %token RPAREN ")"
 %token LCBRA "{"
 %token RCBRA "}"
+%token DOT "."
 %token LET
 %token IN
 %token INTEGRAL
@@ -41,6 +42,7 @@
 %left "+" "-"
 %left "*" "/"
 %left "^"
+%left "."
 %nonassoc UMINUS, EXP, LOG, COS, SIN, TAN, ACOS, ASIN, ATAN, COSH, SINH, TANH, CEIL, FLOOR, ROUND, TRUNC
 
 %start main
@@ -59,6 +61,8 @@ let_expr:
         { e }
 
 expr:
+    | i1 = INT "." i2 = INT
+        { EFloat(float_of_string ((string_of_int i1) ^ "." ^ (string_of_int i2))) }
     | i = INT
         { EInt(i) }
     | INTEGRAL e1 = expr "^" e2 = expr e3 = expr "d" e4 = expr
@@ -93,7 +97,7 @@ expr:
         { EUop(UAcos, e) }
     | ASIN e = expr %prec ASIN
         { EUop(UAsin, e) }
-   | ATAN e = expr %prec ATAN
+    | ATAN e = expr %prec ATAN
         { EUop(UAtan, e) }
     | COSH e = expr %prec COSH
         { EUop(UCosh, e) }
