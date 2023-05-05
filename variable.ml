@@ -9,12 +9,22 @@ module Variable = struct
     variables := Dict.add "eps" (VFloat (Float.epsilon)) !variables;;
     variables := Dict.add "infty" (VFloat (Float.infinity)) !variables
 
+    (**
+        FUNCTION Variable.to_string
+        @type val to_string : value -> string option = <fun>
+        @returns Some x if the variable exists, None if it doesn't
+    *)
     let to_string = function
         | None -> "La variable n'existe pas."
         | Some(s) -> match s with
             | VInt(x) -> string_of_int x
             | VFloat(x) -> string_of_float x
 
+    (**
+        FUNCTION Variable.get
+        @type val get : string -> value option = <fun>
+        @returns Some x if the variable exists, None if it doesn't
+    *)
     let get key =
         try Some(Dict.find key !variables) with
             Not_found -> None

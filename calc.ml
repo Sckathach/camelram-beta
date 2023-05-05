@@ -164,7 +164,6 @@ let rec eval_with_args args = function
 
 let eval = eval_with_args []
 
-
 (**
     FUNCTION eval_function
     @type val eval_function : expr -> value list -> value = <fun>
@@ -173,7 +172,6 @@ let eval = eval_with_args []
 *)
 let eval_function f args = match f with
     EFun(_, vars, e) -> eval_with_args (List.combine vars args) e
-
 
 (**
     FUNCTION eval_function_by_name
@@ -185,16 +183,14 @@ let eval_function_by_name f args = match Function.get f with
     | Some(x) -> eval_function x args
     | None -> failwith "ERREUR : La fonction n'existe pas"
 
-
 (* TESTS *)
 let test_e = ELet("x", EInt(2), EBop(BPow, EInt(2), EBop(BMul, EVar("x"), EBop(BAdd, EVar "x", EVar "y"))))
 let test_args = [(AVar("y"), VInt(1))]
 let test_f = EFun("f", [AVar "x"; AVar "y"], EBop(BAdd, EVar "x", EVar "y"))
 
-
 (**
     FUNCTION replace_var
-    @type val replace_var : string -> expr -> expr
+    @type val replace_var : string -> expr -> expr = <fun>
     @raises Failure if the replacement expression provided has zero or more than one dummy variable
     @return The expression where the variable given as a string argument is replaced by the expression containing the
         new variable
@@ -217,11 +213,21 @@ let replace_var var rep expr =
             else
                 aux var (List.hd l) rep expr
 
+(**
+    FUNCTION list_of_string
+    @type val list_of_string : string -> string list = <fun>
+*)
 let list_of_string s =
     let rec aux i l =
         if i < 0 then l else aux (i - 1) ((String.make 1 s.[i]) :: l) in
     aux (String.length s - 1) []
 
+(**
+    FUNCTION split_var
+    @type val split_var : expr -> expr = <fun>
+    @returns Replaces EVar "ab" with EBop(EMul, EVar "a", EVar "b") if the variable "ab" doesn't exist in the dictionary
+        (for example EVar "pi" is replaced by EVar "pi")
+*)
 let rec split_var = function
     | EVar(a) ->
         begin

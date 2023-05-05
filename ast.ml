@@ -1,10 +1,23 @@
 open Printf
 
+(**
+    TYPE bop
+    Binary Operator, used to simplify pattern matching
+*)
 type bop = BAdd | BSub | BMul | BDiv | BPow
+
+(**
+    TYPE uop
+    Unary Operator, used to simplify pattern matching
+*)
 type uop =  UMinus | UExp | ULog | UCos | USin | UTan
             | UAcos | UAsin | UAtan | UCosh | USinh | UTanh
             | UCeil | UFloor | URound | UTrunc
 
+(**
+    TYPE expr
+    Type of the Abstract Syntax Tree
+*)
 type expr =
     | EInt          of int
     | EFloat        of float
@@ -19,15 +32,26 @@ and func = string * arg list * expr
 and arg =
     | AVar      of string
 
-(* Achtung force_value_to_float*)
+(**
+    TYPE value
+    Used when the AST is evaluated
+*)
 type value =
     | VInt      of int
     | VFloat    of float
 
+(**
+    FUNCTION force_value_to_float
+    @type val force_value_to_float : value -> float = <fun>
+*)
 let force_value_to_float = function
     | VInt(x) -> float_of_int x
     | VFloat(x) -> x
 
+(**
+    FUNCTION pprint_value
+    @type val pprint_value : value -> string = <fun>
+*)
 let pprint_value = function
     | VFloat(x) -> Printf.sprintf "%f" x
     | VInt(x) -> Printf.sprintf "%d" x
