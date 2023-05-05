@@ -97,7 +97,7 @@ let seek_mute_var expr =
             end
         | _ -> [], []
     in
-    (* aux2 removes the ones in both lists *)
+    (* aux2 removes the elements that are in both lists *)
     let rec aux2 acc l = function
         | [] -> acc
         | x :: q -> if find x l || find x acc then aux2 acc l q else aux2 (x :: acc) l q
@@ -162,6 +162,11 @@ let rec eval_with_args args = function
             VFloat ((force_value_to_float !s) *. eps)
     | EIntegralD(_, _, _, _) -> failwith "ERREUR : Syntaxe dans l'intégrale"
 
+(**
+    FUNCTION eval
+    @type val eval : expr -> value
+    @raises failwith if an argument is needed
+*)
 let eval = eval_with_args []
 
 (**
