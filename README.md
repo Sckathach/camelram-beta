@@ -1,7 +1,7 @@
 # Camelram Bêta Compiler #
 
 ## Intro ##
-This compiler aims to compile parts of LaTeX. There are already : 
+This compiler aims to compile parts of LaTeX. There is already : 
 - basic operations on integers/floats : `+ - * / ^`
 - basic operations on floats : `\exp, \log, \cos,\sin, \tan, \acos, \asin, \atan, \cosh, \sinh, \tanh, \ceil, \floor, 
 \round, \trunc`
