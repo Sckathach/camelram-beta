@@ -38,6 +38,7 @@
 %token INFTY
 %token PI
 %token FRAC
+%token DERIVE
 
 %left "+" "-"
 %left "*" "/"
@@ -61,6 +62,8 @@ let_expr:
         { e }
 
 expr:
+    | DERIVE e1 = expr e2 = expr
+        { EDifferentiate(e1, e2) }
     | i1 = INT "." i2 = INT
         { EFloat(float_of_string ((string_of_int i1) ^ "." ^ (string_of_int i2))) }
     | i = INT

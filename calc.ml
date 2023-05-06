@@ -97,7 +97,7 @@ let seek_mute_var expr =
             end
         | _ -> [], []
     in
-    (* aux2 removes the ones in both lists *)
+    (* aux2 removes the elements that are in both lists *)
     let rec aux2 acc l = function
         | [] -> acc
         | x :: q -> if find x l || find x acc then aux2 acc l q else aux2 (x :: acc) l q
@@ -162,6 +162,11 @@ let rec eval_with_args args = function
             VFloat ((force_value_to_float !s) *. eps)
     | EIntegralD(_, _, _, _) -> failwith "ERREUR : Syntaxe dans l'intégrale"
 
+(**
+    FUNCTION eval
+    @type val eval : expr -> value
+    @raises failwith if an argument is needed
+*)
 let eval = eval_with_args []
 
 (**
@@ -279,7 +284,7 @@ let rec differentiate expr x=
             begin
                 match op with
                     | UMinus -> EUop(UMinus, (differentiate e1 x))
-                    | UExp -> EBop(BMul, (differentiate e1 x), UExp(e1))
+                    | UExp -> EBop(BMul, (differentiate e1 x), EUop(UExp, e1))
                     | ULog -> EBop(BDiv, (differentiate e1 x), e1)
                     | UCos -> EBop(BMul, (differentiate e1 x), EUop(UMinus, EUop(USin, e1)))
                     | USin -> EBop(BMul, (differentiate e1 x), EUop(UCos, e1))
@@ -295,7 +300,7 @@ let rec differentiate expr x=
                     | URound -> failwith "ERREUR : Dérivation de fonction non dérivable"
                     | UTrunc -> failwith "ERREUR : Dérivation de fonction non dérivable"
             end
-        | EFloat(_) -> 0
-        | EInt(_) -> 0
-        | EVar(y) when y=x -> 1
-        | EVar(y) -> 0
+        | EFloat(_) -> EInt(0)
+        | EInt(_) -> EInt(0)
+        | EVar(y) when y = x -> EInt(1)
+        | EVar(y) -> EInt(0)

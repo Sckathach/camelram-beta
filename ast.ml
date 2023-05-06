@@ -25,6 +25,7 @@ type expr =
     | EUop          of uop * expr
     | EIntegral     of expr * expr * expr
     | EIntegralD    of expr * expr * expr * expr
+    | EDifferentiate        of expr * expr
     | ELet          of string * expr * expr
     | EVar          of string
     | EFun          of func
@@ -56,7 +57,7 @@ let rec string_of_expr = function
     | EInt(x) -> (Printf.sprintf "EInt(%d)" x)
     | EFloat(x) -> "EFloat(" ^ (string_of_float x) ^ ")"
     | EVar(x) -> (Printf.sprintf "EVar(%s)" x)
-    | EBop(op, e1, e2) -> 
+    | EBop(op, e1, e2) ->
         begin
             match op with
                 | BAdd -> "EBop(BAdd, " ^ (string_of_expr e1) ^ ", " ^ (string_of_expr e2) ^ ")"
@@ -95,7 +96,7 @@ let rec latex_of_expr = function
     | EInt(x) -> (Printf.sprintf "%d" x)
     | EFloat(x) -> (string_of_float x)
     | EVar(x) -> (Printf.sprintf "%s" x)
-    | EBop(op, e1, e2) -> 
+    | EBop(op, e1, e2) ->
         begin
             match op with
                 | BAdd -> "(" ^ (string_of_expr e1) ^ " + " ^ (string_of_expr e2) ^ ")"
@@ -124,12 +125,12 @@ let rec latex_of_expr = function
                 | URound -> "\\lfloor " ^ (string_of_expr e1) ^ " \\rceil"
                 | UTrunc -> "\\trunc{" ^ (string_of_expr e1) ^ "}"
         end
-    | EIntegral(expr, bb, bh) -> 
+    | EIntegral(expr, bb, bh) ->
         "\\int_{" ^ (string_of_expr bb) ^ "}^{" ^ (string_of_expr bh) ^ "} " ^ (string_of_expr expr) ^ "\\,d" (*PROBLEME*)
     | EIntegralD(expr, bb, bh, d) ->
         "\\int_{" ^ (string_of_expr bb) ^ "}^{" ^ (string_of_expr bh) ^ "} " ^ (string_of_expr expr) ^ "\\,d" ^ (string_of_expr d)
     | EDifferentiate(expr, x) ->
         "\\frac{\\mathrm{d}}{\\mathrm{d}" ^ (string_of_expr x) ^ "}(" ^ (string_of_expr expr) ^ ")"
-    | ELet(x, e1, e2) -> 
+    | ELet(x, e1, e2) ->
         "let " ^ x ^ " = " ^ (string_of_expr e1) ^ " in " ^ (string_of_expr e2)
     (*| EFun*)
