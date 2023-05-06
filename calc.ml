@@ -253,3 +253,54 @@ let rec split_var = function
     | ELet(x, e1, e2) -> ELet(x, split_var e1, split_var e2)
     | EIntegral(e1, e2, e3) -> EIntegral(split_var e1, split_var e2, split_var e3)
     | EIntegralD(e1, e2, e3, e4) -> EIntegralD(split_var e1, split_var e2, split_var e3, e4)
+
+
+let rec differentiate expr x=
+    match expr with
+        | EDifferentiate(e1, y) -> EDifferentiate((differentiate e1 x), y)
+        (*| EIntegralD(e, _, _, EVar(d)) when d=x -> e
+        | EIntegralD(e, bb, bh, d) -> EIntegralD((differentiate e x), (differentiate bb x), (differentiate bh x), d)
+        | EIntegral(e, bb ,bh) ->
+            begin
+                let dummies = seek_mute_var e3 in
+                    if List.length dummies != 1 then
+                        failwith "ERREUR : Il faut une variable muette pour l'intégrale"
+                    else
+                        if (List.hd dummies) = x then
+                            e
+                        else
+                            
+            end*)
+        | EBop(op, e1, e2) -> 
+            begin
+                match op with
+                    | BAdd -> EBop(BAdd, (differentiate e1 x), (differentiate e2 x))
+                    | BSub -> EBop(BSub, (differentiate e1 x), (differentiate e2 x))
+                    | BMul -> EBop(BAdd, EBop(BMul, (differentiate e1 x), e2), EBop(BMul, e1, (differentiate e2 x)))
+                    | BDiv -> EBop(BDiv, EBop(BSub, EBop(BMul, (differentiate e1 x), e2), EBop(BMul, e1, (differentiate e2 x))), EBop(BMul, e2, e2))
+                    | BPow -> EBop(BMul, EBop(BPow, e1, EBop(BSub, e2, EInt(1))), EBop(BAdd, EBop(BMul, (differentiate e1 x), e2), EBop(BMul, EBop(BMul, e1, EUop(ULog, e1)), (differentiate e2 x))))
+            end
+        | EUop(op, e1) ->
+            begin
+                match op with
+                    | UMinus -> EUop(UMinus, (differentiate e1 x))
+                    | UExp -> EBop(BMul, (differentiate e1 x), UExp(e1))
+                    | ULog -> EBop(BDiv, (differentiate e1 x), e1)
+                    | UCos -> EBop(BMul, (differentiate e1 x), EUop(UMinus, EUop(USin, e1)))
+                    | USin -> EBop(BMul, (differentiate e1 x), EUop(UCos, e1))
+                    | UTan -> EBop(BDiv, (differentiate e1 x), EBop(BMul, EUop(UCos, e1),EUop(UCos, e1)))
+                    | UAcos -> EUop(UMinus, EBop(BDiv, (differentiate e1 x), EBop(BPow, EBop(BSub, EInt(1), EBop(BMul, e1, e1)), EUop(UMinus, EInt(1)))))
+                    | UAsin -> EBop(BDiv, (differentiate e1 x), EBop(BPow, EBop(BSub, EInt(1), EBop(BMul, e1, e1)), EUop(UMinus, EInt(1))))
+                    | UAtan -> EBop(BDiv, (differentiate e1 x), EBop(BAdd, EInt(1), EBop(BMul, e1, e1)))
+                    | UCosh -> EBop(BMul, (differentiate e1 x), EUop(USinh, e1))
+                    | USinh -> EBop(BMul, (differentiate e1 x), EUop(UCosh, e1))
+                    | UTanh -> EBop(BDiv, (differentiate e1 x), EBop(BMul, EUop(UCosh, e1),EUop(UCosh, e1)))
+                    | UCeil -> failwith "ERREUR : Dérivation de fonction non dérivable"
+                    | UFloor -> failwith "ERREUR : Dérivation de fonction non dérivable"
+                    | URound -> failwith "ERREUR : Dérivation de fonction non dérivable"
+                    | UTrunc -> failwith "ERREUR : Dérivation de fonction non dérivable"
+            end
+        | EFloat(_) -> 0
+        | EInt(_) -> 0
+        | EVar(y) when y=x -> 1
+        | EVar(y) -> 0
