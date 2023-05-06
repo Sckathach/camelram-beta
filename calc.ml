@@ -36,7 +36,6 @@ let fun_of_uop = function
     | UCeil -> General.ceil
     | UFloor -> General.floor
     | URound -> General.round
-    | UTrunc -> General.trunc
 
 (**
     FUNCTION vars
@@ -298,7 +297,6 @@ let rec differentiate expr x=
                     | UCeil -> failwith "ERREUR : Dérivation de fonction non dérivable"
                     | UFloor -> failwith "ERREUR : Dérivation de fonction non dérivable"
                     | URound -> failwith "ERREUR : Dérivation de fonction non dérivable"
-                    | UTrunc -> failwith "ERREUR : Dérivation de fonction non dérivable"
             end
         | EFloat(_) -> EInt(0)
         | EInt(_) -> EInt(0)

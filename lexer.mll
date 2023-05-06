@@ -36,7 +36,6 @@ rule token = parse
                 | "\ceil" -> CEIL
                 | "\floor" -> FLOOR
                 | "\round" -> ROUND
-                | "\trunc" -> TRUNC
                 | "\infty" -> INFTY
                 | "\pi" -> PI
                 | "\frac" -> FRAC

@@ -4,7 +4,7 @@
 This compiler aims to compile parts of LaTeX. There is already : 
 - basic operations on integers/floats : `+ - * / ^`
 - basic operations on floats : `\exp, \log, \cos,\sin, \tan, \acos, \asin, \atan, \cosh, \sinh, \tanh, \ceil, \floor, 
-\round, \trunc`
+\round`
 - approximation of integrals : `\int`
 - local variables : `let x = 2^64 in`
 

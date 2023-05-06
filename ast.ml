@@ -12,7 +12,7 @@ type bop = BAdd | BSub | BMul | BDiv | BPow
 *)
 type uop =  UMinus | UExp | ULog | UCos | USin | UTan
             | UAcos | UAsin | UAtan | UCosh | USinh | UTanh
-            | UCeil | UFloor | URound | UTrunc
+            | UCeil | UFloor | URound
 
 (**
     TYPE expr
@@ -49,6 +49,13 @@ let force_value_to_float = function
     | VInt(x) -> float_of_int x
     | VFloat(x) -> x
 
+(**
+    FUNCTION pprint_value
+    @type val pprint_value : value -> string = <fun>
+*)
+let pprint_value = function
+    | VFloat(x) -> Printf.sprintf "%f" x
+    | VInt(x) -> Printf.sprintf "%d" x
 
 (**
     AFFICHAGE
@@ -84,7 +91,6 @@ let rec string_of_expr = function
                 | UCeil -> "EUop(UCeil, " ^ (string_of_expr e1) ^ ")"
                 | UFloor -> "EUop(UFloor, " ^ (string_of_expr e1) ^ ")"
                 | URound -> "EUop(URound, " ^ (string_of_expr e1) ^ ")"
-                | UTrunc -> "EUop(UTrunc, " ^ (string_of_expr e1) ^ ")"
         end
     | EIntegral(expr, bb, bh) -> "EIntegral(" ^ (string_of_expr expr) ^ ", " ^ (string_of_expr bb) ^ ", " ^ (string_of_expr bh) ^ ")"
     | EIntegralD(expr, bb, bh, d) -> "EIntegralD(" ^ (string_of_expr expr) ^ ", " ^ (string_of_expr bb) ^ ", " ^ (string_of_expr bh) ^ ", " ^ (string_of_expr d) ^ ")"
@@ -99,38 +105,37 @@ let rec latex_of_expr = function
     | EBop(op, e1, e2) ->
         begin
             match op with
-                | BAdd -> "(" ^ (string_of_expr e1) ^ " + " ^ (string_of_expr e2) ^ ")"
-                | BSub -> "(" ^ (string_of_expr e1) ^ " - " ^ (string_of_expr e2) ^ ")"
-                | BMul -> (string_of_expr e1) ^ " * " ^ (string_of_expr e2)
-                | BDiv -> "\\frac{" ^ (string_of_expr e1) ^ "}{" ^ (string_of_expr e2) ^ "}"
-                | BPow -> (string_of_expr e1) ^ "^{" ^ (string_of_expr e2) ^ "}"
+                | BAdd -> "(" ^ (latex_of_expr e1) ^ " + " ^ (latex_of_expr e2) ^ ")"
+                | BSub -> "(" ^ (latex_of_expr e1) ^ " - " ^ (latex_of_expr e2) ^ ")"
+                | BMul -> (latex_of_expr e1) ^ " * " ^ (latex_of_expr e2)
+                | BDiv -> "\\frac{" ^ (latex_of_expr e1) ^ "}{" ^ (latex_of_expr e2) ^ "}"
+                | BPow -> (latex_of_expr e1) ^ "^{" ^ (latex_of_expr e2) ^ "}"
         end
     | EUop(op, e1) ->
         begin
             match op with
-                | UMinus -> "-(" ^ (string_of_expr e1) ^ ")"
-                | UExp -> "\\exp{" ^ (string_of_expr e1) ^ "}"
-                | ULog -> "\\log{" ^ (string_of_expr e1) ^ "}"
-                | UCos -> "\\cos{" ^ (string_of_expr e1) ^ "}"
-                | USin -> "\\sin{" ^ (string_of_expr e1) ^ "}"
-                | UTan -> "\\tan{" ^ (string_of_expr e1) ^ "}"
-                | UAcos -> "\\arccos{" ^ (string_of_expr e1) ^ "}"
-                | UAsin -> "\\arcsin{" ^ (string_of_expr e1) ^ "}"
-                | UAtan -> "\\arctan{" ^ (string_of_expr e1) ^ "}"
-                | UCosh -> "\\cosh{" ^ (string_of_expr e1) ^ "}"
-                | USinh -> "\\sinh{" ^ (string_of_expr e1) ^ "}"
-                | UTanh -> "\\tanh{" ^ (string_of_expr e1) ^ "}"
-                | UCeil -> "\\lceil " ^ (string_of_expr e1) ^ " \\rceil"
-                | UFloor -> "\\lfloor " ^ (string_of_expr e1) ^ " \\rfloor"
-                | URound -> "\\lfloor " ^ (string_of_expr e1) ^ " \\rceil"
-                | UTrunc -> "\\trunc{" ^ (string_of_expr e1) ^ "}"
+                | UMinus -> "-(" ^ (latex_of_expr e1) ^ ")"
+                | UExp -> "\\exp(" ^ (latex_of_expr e1) ^ ")"
+                | ULog -> "\\log(" ^ (latex_of_expr e1) ^ ")"
+                | UCos -> "\\cos(" ^ (latex_of_expr e1) ^ ")"
+                | USin -> "\\sin(" ^ (latex_of_expr e1) ^ ")"
+                | UTan -> "\\tan(" ^ (latex_of_expr e1) ^ ")"
+                | UAcos -> "\\arccos{" ^ (latex_of_expr e1) ^ "}"
+                | UAsin -> "\\arcsin{" ^ (latex_of_expr e1) ^ "}"
+                | UAtan -> "\\arctan{" ^ (latex_of_expr e1) ^ "}"
+                | UCosh -> "\\cosh{" ^ (latex_of_expr e1) ^ "}"
+                | USinh -> "\\sinh{" ^ (latex_of_expr e1) ^ "}"
+                | UTanh -> "\\tanh{" ^ (latex_of_expr e1) ^ "}"
+                | UCeil -> "\\lceil " ^ (latex_of_expr e1) ^ " \\rceil"
+                | UFloor -> "\\lfloor " ^ (latex_of_expr e1) ^ " \\rfloor"
+                | URound -> "\\lfloor " ^ (latex_of_expr e1) ^ " \\rceil"
         end
     | EIntegral(expr, bb, bh) ->
-        "\\int_{" ^ (string_of_expr bb) ^ "}^{" ^ (string_of_expr bh) ^ "} " ^ (string_of_expr expr) ^ "\\,d" (*PROBLEME*)
+        "\\int_{" ^ (latex_of_expr bb) ^ "}^{" ^ (latex_of_expr bh) ^ "} " ^ (latex_of_expr expr) ^ "\\,d" (*PROBLEME*)
     | EIntegralD(expr, bb, bh, d) ->
-        "\\int_{" ^ (string_of_expr bb) ^ "}^{" ^ (string_of_expr bh) ^ "} " ^ (string_of_expr expr) ^ "\\,d" ^ (string_of_expr d)
+        "\\int_{" ^ (latex_of_expr bb) ^ "}^{" ^ (latex_of_expr bh) ^ "} " ^ (latex_of_expr expr) ^ "\\,d" ^ (string_of_expr d)
     | EDifferentiate(expr, x) ->
-        "\\frac{\\mathrm{d}}{\\mathrm{d}" ^ (string_of_expr x) ^ "}(" ^ (string_of_expr expr) ^ ")"
+        "\\frac{\\mathrm{d}}{\\mathrm{d}" ^ (latex_of_expr x) ^ "}(" ^ (latex_of_expr expr) ^ ")"
     | ELet(x, e1, e2) ->
-        "let " ^ x ^ " = " ^ (string_of_expr e1) ^ " in " ^ (string_of_expr e2)
+        "let " ^ x ^ " = " ^ (latex_of_expr e1) ^ " in " ^ (latex_of_expr e2)
     (*| EFun*)

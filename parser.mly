@@ -34,7 +34,6 @@
 %token CEIL
 %token FLOOR
 %token ROUND
-%token TRUNC
 %token INFTY
 %token PI
 %token FRAC
@@ -44,7 +43,7 @@
 %left "*" "/"
 %left "^"
 %left "."
-%nonassoc UMINUS, EXP, LOG, COS, SIN, TAN, ACOS, ASIN, ATAN, COSH, SINH, TANH, CEIL, FLOOR, ROUND, TRUNC
+%nonassoc UMINUS, EXP, LOG, COS, SIN, TAN, ACOS, ASIN, ATAN, COSH, SINH, TANH, CEIL, FLOOR, ROUND
 
 %start main
 %type <expr> main
@@ -116,8 +115,6 @@ expr:
         { EUop(UFloor, e) }
     | ROUND e = expr %prec ROUND
         { EUop(URound, e) }
-    | TRUNC e = expr %prec TRUNC
-        { EUop(UTrunc, e) }
     | x = IDENT
         { EVar(x) }
     | x = INFTY

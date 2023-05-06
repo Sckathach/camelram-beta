@@ -65,7 +65,6 @@ let tanh a = VFloat(Float.tanh (force_value_to_float a));;
 let ceil a = VFloat(Float.ceil (force_value_to_float a));;
 let floor a = VFloat(Float.floor (force_value_to_float a));;
 let round a = VFloat(Float.round (force_value_to_float a));;
-let trunc a = VFloat(Float.trunc (force_value_to_float a));;
 
 let power a b =
   match a, b with
