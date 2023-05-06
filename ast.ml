@@ -131,11 +131,10 @@ let rec latex_of_expr = function
                 | URound -> "\\lfloor " ^ (latex_of_expr e1) ^ " \\rceil"
         end
     | EIntegral(expr, bb, bh) ->
-        "\\int_{" ^ (latex_of_expr bb) ^ "}^{" ^ (latex_of_expr bh) ^ "} " ^ (latex_of_expr expr) ^ "\\,d" (*PROBLEME*)
+        "\\int_{" ^ (latex_of_expr bb) ^ "}^{" ^ (latex_of_expr bh) ^ "}(" ^ (latex_of_expr expr) ^ ")"
     | EIntegralD(expr, bb, bh, d) ->
-        "\\int_{" ^ (latex_of_expr bb) ^ "}^{" ^ (latex_of_expr bh) ^ "} " ^ (latex_of_expr expr) ^ "\\,d" ^ (string_of_expr d)
+        "\\int_{" ^ (latex_of_expr bb) ^ "}^{" ^ (latex_of_expr bh) ^ "} " ^ (latex_of_expr expr) ^ "\\,d" ^ (latex_of_expr d)
     | EDifferentiate(expr, x) ->
         "\\frac{\\mathrm{d}}{\\mathrm{d}" ^ (latex_of_expr x) ^ "}(" ^ (latex_of_expr expr) ^ ")"
     | ELet(x, e1, e2) ->
         "let " ^ x ^ " = " ^ (latex_of_expr e1) ^ " in " ^ (latex_of_expr e2)
-    (*| EFun*)
