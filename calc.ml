@@ -273,7 +273,7 @@ let rec differentiate expr x=
                     | BSub -> EBop(BSub, (differentiate e1 x), (differentiate e2 x))
                     | BMul -> EBop(BAdd, EBop(BMul, (differentiate e1 x), e2), EBop(BMul, e1, (differentiate e2 x)))
                     | BDiv -> EBop(BDiv, EBop(BSub, EBop(BMul, (differentiate e1 x), e2), EBop(BMul, e1, (differentiate e2 x))), EBop(BMul, e2, e2))
-                    | BPow -> EBop(BMul, EBop(BPow, e1, EBop(BSub, e2, EInt(1))), EBop(BAdd, EBop(BMul, (differentiate e1 x), e2), EBop(BMul, EBop(BMul, e1, EUop(ULog, e1)), (differentiate e2 x))))
+                    | BPow -> EBop(BAdd, EBop(BMul, EBop(BMul, EUop(ULog, e1), EBop(BPow, e1, e2)), (differentiate e2 x)), EBop(BMul, EBop(BMul, e2, EBop(BPow, e1, EBop(BSub, e2, EInt(1)))), (differentiate e1 x)))
             end
         | EUop(op, e1) ->
             begin
@@ -284,8 +284,8 @@ let rec differentiate expr x=
                     | UCos -> EBop(BMul, (differentiate e1 x), EUop(UMinus, EUop(USin, e1)))
                     | USin -> EBop(BMul, (differentiate e1 x), EUop(UCos, e1))
                     | UTan -> EBop(BDiv, (differentiate e1 x), EBop(BMul, EUop(UCos, e1),EUop(UCos, e1)))
-                    | UAcos -> EUop(UMinus, EBop(BDiv, (differentiate e1 x), EBop(BPow, EBop(BSub, EInt(1), EBop(BMul, e1, e1)), EUop(UMinus, EInt(1)))))
-                    | UAsin -> EBop(BDiv, (differentiate e1 x), EBop(BPow, EBop(BSub, EInt(1), EBop(BMul, e1, e1)), EUop(UMinus, EInt(1))))
+                    | UAcos -> EUop(UMinus, EBop(BDiv, (differentiate e1 x), EBop(BPow, EBop(BSub, EInt(1), EBop(BMul, e1, e1)), EFloat(0.5))))
+                    | UAsin -> EBop(BDiv, (differentiate e1 x), EBop(BPow, EBop(BSub, EInt(1), EBop(BMul, e1, e1)), EFloat(0.5)))
                     | UAtan -> EBop(BDiv, (differentiate e1 x), EBop(BAdd, EInt(1), EBop(BMul, e1, e1)))
                     | UCosh -> EBop(BMul, (differentiate e1 x), EUop(USinh, e1))
                     | USinh -> EBop(BMul, (differentiate e1 x), EUop(UCosh, e1))
