@@ -40,6 +40,7 @@ rule token = parse
                 | "\infty" -> INFTY
                 | "\pi" -> PI
                 | "\frac" -> FRAC
+                | "\derive" -> DERIVE
                 | s -> IDENT(s)
         }
     | ['=']
