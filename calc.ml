@@ -161,6 +161,45 @@ let rec eval_with_args args = function
             done;
             VFloat ((force_value_to_float !s) *. eps)
     | EIntegralD(_, _, _, _) -> failwith "ERREUR : Syntaxe dans l'intégrale"
+    | EDerivate(e1, Evar(x)) ->
+        begin
+            match e1 with
+                | EIntegralD(e, _, _, Evar(x)) -> e
+                | EintegralD(e, bb, bh, Evar(d)) -> EintegralD(EDerivate(e), bb, bh, Evar(d))
+                | EBop(op, e1, e2) -> 
+                    begin
+                        match op with
+                            | BAdd -> EBop(BAdd, EDerivate(e1), EDerivate(e2))
+                            | BSub -> EBop(BSub, EDerivate(e1), EDerivate(e2))
+                            | BMul -> EBop(BAdd, EBop(BMul, EDerivate(e1), e2), EBop(BMul, e1, EDerivate(e2)))
+                            | BDiv -> EBop(BDiv, EBop(BSub, EBop(BMul, EDerivate(e1), e2), EBop(BMul, e1, EDerivate(e2))), EBop(BMul, e2, e2))
+                            | BPow -> EBop(BMul, EBop(BPow, e1, EBop(BSub, e2, EInt(1))), EBop(BAdd, EBop(BMul, EDerivate(e1), e2), EBop(BMul, EBop(BMul, e1, EUop(ULog, e1)), EDerivate(e2))))
+                    end
+                | EUop(op, e1) ->
+                    begin
+                        match op with
+                            | UMinus -> EUop(UMinus, EDerivate(e1))
+                            | UExp -> EBop(BMul, EDerivate(e1), UExp(e1))
+                            | ULog -> EBop(BDiv, EDerivate(e1), e1)
+                            | UCos -> EBop(BMul, EDerivate(e1), EUop(UMinus, EUop(USin, e1)))
+                            | USin -> EBop(BMul, EDerivate(e1), EUop(UCos, e1))
+                            | UTan -> EBop(BDiv, EDerivate(e1), EBop(BMul, EUop(UCos, e1),EUop(UCos, e1)))
+                            | UAcos -> EUop(UMinus, EBop(BDiv, EDerivate(e1), EBop(BPow, EBop(BSub, EInt(1), EBop(BMul, e1, e1)), EUop(UMinus, EInt(1)))))
+                            | UAsin -> EBop(BDiv, EDerivate(e1), EBop(BPow, EBop(BSub, EInt(1), EBop(BMul, e1, e1)), EUop(UMinus, EInt(1))))
+                            | UAtan -> EBop(BDiv, EDerivate(e1), EBop(BAdd, EInt(1), EBop(BMul, e1, e1)))
+                            | UCosh -> EBop(BMul, EDerivate(e1), EUop(USinh, e1))
+                            | USinh -> EBop(BMul, EDerivate(e1), EUop(UCosh, e1))
+                            | UTanh -> EBop(BDiv, EDerivate(e1), EBop(BMul, EUop(UCosh, e1),EUop(UCosh, e1)))
+                            | UCeil -> failwith "ERREUR : Dérivation de fonction non dérivable"
+                            | UFloor -> failwith "ERREUR : Dérivation de fonction non dérivable"
+                            | URound -> failwith "ERREUR : Dérivation de fonction non dérivable"
+                            | UTrunc -> failwith "ERREUR : Dérivation de fonction non dérivable"
+                    end
+                | EFloat(_) -> 0
+                | EInt(_) -> 0
+                | EVar(x) -> 1
+                | EVar(y) -> 0
+        end
 
 let eval = eval_with_args []
 
