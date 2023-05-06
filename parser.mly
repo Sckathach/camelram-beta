@@ -63,7 +63,7 @@ let_expr:
 
 expr:
     | DERIVE e1 = expr e2 = expr
-        { EDerive(e1, e2) }
+        { EDifferentiate(e1, e2) }
     | i1 = INT "." i2 = INT
         { EFloat(float_of_string ((string_of_int i1) ^ "." ^ (string_of_int i2))) }
     | i = INT

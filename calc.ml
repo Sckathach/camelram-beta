@@ -284,7 +284,7 @@ let rec differentiate expr x=
             begin
                 match op with
                     | UMinus -> EUop(UMinus, (differentiate e1 x))
-                    | UExp -> EBop(BMul, (differentiate e1 x), UExp(e1))
+                    | UExp -> EBop(BMul, (differentiate e1 x), EUop(UExp, e1))
                     | ULog -> EBop(BDiv, (differentiate e1 x), e1)
                     | UCos -> EBop(BMul, (differentiate e1 x), EUop(UMinus, EUop(USin, e1)))
                     | USin -> EBop(BMul, (differentiate e1 x), EUop(UCos, e1))
@@ -300,7 +300,7 @@ let rec differentiate expr x=
                     | URound -> failwith "ERREUR : Dérivation de fonction non dérivable"
                     | UTrunc -> failwith "ERREUR : Dérivation de fonction non dérivable"
             end
-        | EFloat(_) -> 0
-        | EInt(_) -> 0
-        | EVar(y) when y=x -> 1
-        | EVar(y) -> 0
+        | EFloat(_) -> EInt(0)
+        | EInt(_) -> EInt(0)
+        | EVar(y) when y = x -> EInt(1)
+        | EVar(y) -> EInt(0)
