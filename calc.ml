@@ -253,7 +253,10 @@ let rec split_var = function
     | EIntegral(e1, e2, e3) -> EIntegral(split_var e1, split_var e2, split_var e3)
     | EIntegralD(e1, e2, e3, e4) -> EIntegralD(split_var e1, split_var e2, split_var e3, e4)
 
-
+(**
+    FUNCTION differentiate
+    @type val differentiate : expr -> expr -> expr = <fun>
+*)
 let rec differentiate expr x=
     match expr with
         | EDifferentiate(e1, y) -> EDifferentiate((differentiate e1 x), y)

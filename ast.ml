@@ -57,8 +57,13 @@ let pprint_value = function
     | VFloat(x) -> Printf.sprintf "%f" x
     | VInt(x) -> Printf.sprintf "%d" x
 
+
 (**
     AFFICHAGE
+*)
+(**
+    FUNCTION string_of_expr
+    @type val string_ofexpr : expr -> string = <fun>
 *)
 let rec string_of_expr = function
     | EInt(x) -> (Printf.sprintf "EInt(%d)" x)
@@ -96,8 +101,11 @@ let rec string_of_expr = function
     | EIntegralD(expr, bb, bh, d) -> "EIntegralD(" ^ (string_of_expr expr) ^ ", " ^ (string_of_expr bb) ^ ", " ^ (string_of_expr bh) ^ ", " ^ (string_of_expr d) ^ ")"
     | EDifferentiate(expr, x) -> "EDifferentiate(" ^ (string_of_expr expr) ^ ", " ^ (string_of_expr x) ^ ")"
     | ELet(x, e1, e2) -> "ELet(" ^ x ^ ", " ^ (string_of_expr e1) ^ ", " ^ (string_of_expr e2) ^ ")"
-    (*| EFun*)
 
+(**
+    FUNCTION latex_of_expr
+    @type val string_ofexpr : expr -> string = <fun>
+*)
 let rec latex_of_expr = function
     | EInt(x) -> (Printf.sprintf "%d" x)
     | EFloat(x) -> (string_of_float x)
@@ -115,11 +123,11 @@ let rec latex_of_expr = function
         begin
             match op with
                 | UMinus -> "-(" ^ (latex_of_expr e1) ^ ")"
-                | UExp -> "\\exp(" ^ (latex_of_expr e1) ^ ")"
-                | ULog -> "\\log(" ^ (latex_of_expr e1) ^ ")"
-                | UCos -> "\\cos(" ^ (latex_of_expr e1) ^ ")"
-                | USin -> "\\sin(" ^ (latex_of_expr e1) ^ ")"
-                | UTan -> "\\tan(" ^ (latex_of_expr e1) ^ ")"
+                | UExp -> "\\exp{" ^ (latex_of_expr e1) ^ "}"
+                | ULog -> "\\log{" ^ (latex_of_expr e1) ^ "}"
+                | UCos -> "\\cos{" ^ (latex_of_expr e1) ^ "}"
+                | USin -> "\\sin{" ^ (latex_of_expr e1) ^ "}"
+                | UTan -> "\\tan{" ^ (latex_of_expr e1) ^ "}"
                 | UAcos -> "\\arccos{" ^ (latex_of_expr e1) ^ "}"
                 | UAsin -> "\\arcsin{" ^ (latex_of_expr e1) ^ "}"
                 | UAtan -> "\\arctan{" ^ (latex_of_expr e1) ^ "}"
