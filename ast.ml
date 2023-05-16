@@ -26,6 +26,7 @@ type expr =
     | EIntegral     of expr * expr * expr
     | EIntegralD    of expr * expr * expr * expr
     | EDifferentiate        of expr * expr
+    | EPol          of string * expr
     | ELet          of string * expr * expr
     | EVar          of string
     | EFun          of func
