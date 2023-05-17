@@ -1,9 +1,10 @@
-module type Polynomial = sig
-    exception BadType
-    val add : Ast.expr -> Ast.expr -> Ast.expr
-end
-
-module Polynomial : Polynomial = struct
+(* module type Polynomial = sig *)
+(*    exception BadType *)
+(*    val add : Ast.expr -> Ast.expr -> Ast.expr *)
+(* end *)
+(*  *)
+(* module Polynomial : Polynomial = struct *)
+module Polynomial = struct
     open Ast
     open General
     exception BadType
@@ -73,4 +74,62 @@ module Polynomial : Polynomial = struct
         let e = add_poly c d in
         let f = expr_of_pol vara e in
         EPol(vara, f)
+
+    let rec degree p =
+    match p with
+        | [] -> -1
+        | (_, d) :: t -> max d (degree t)
+    ;;
+
+    let rec split p k =
+    match p with
+        | [] -> [], []
+        | (a, b) :: q ->let t, g = split q k in
+                        if b >= k then (a, b - k) :: t, g
+                        else t, (a, b) :: g
+    ;;
+
+    let rec simple_mult p k =
+        match p with
+            | [] -> []
+            | (a, b) :: q -> (a, b + k) :: (simple_mult q k)
+    ;;
+
+    let rec karatsuba f g =
+        match f, g with
+            | [], _ -> []
+            | _, [] -> []
+            | [(a, k)], _ -> simple_mult (List.map (fun (x, y) -> (General.mult a x, y)) g) k
+            | _, [(a, k)] -> simple_mult (List.map (fun (x, y) -> (General.mult a x, y)) f) k
+            | _, _ -> let k = ((max (degree f) (degree g)) / 2) 1 in
+                  let f1, f0 = split f k in
+                  let g1, g0 = split g k in
+                  let b = simple_mult (add_poly (karatsuba f1 g0) (karatsuba f0 g1)) k in
+                  let a = karatsuba f0 g0 in
+                  let c = simple_mult (karatsuba f1 g1) (2 * k) in
+                  add_poly a (add_poly b c)
+    ;;
+    let rec mult_poly p q =
+        List.rev (karatsuba (List.rev p) (List.rev q))
+    ;;
+
+    let rec leading_term p =
+        match p with
+            | [] -> VInt(0)
+            | [(a, b)] -> a
+            | t :: q -> leading_term q
+    ;;
+
+    let rev l = List.rev l ;;
+
+    let rec div_poly p q =
+        if degree p < degree q then [], p
+        else
+            let quotient = General.div (leading_term p) (leading_term q) in
+            let quotient_degree = (degree p) - (degree q) in
+            let quotient_poly = (quotient, quotient_degree) in
+            let remainder =  rev ((add_poly (rev p) (rev (mult_scal_poly (VInt(-1)) (mult_poly q [quotient_poly]))))) in
+            let recursiveQuotient, recursiveRemainder = div_poly remainder q in
+            (quotient_poly :: recursiveQuotient), recursiveRemainder
+;;
 end
