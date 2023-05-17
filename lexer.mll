@@ -40,6 +40,7 @@ rule token = parse
                 | "\pi" -> PI
                 | "\frac" -> FRAC
                 | "\derive" -> DERIVE
+                | "\pol" -> POL
                 | s -> IDENT(s)
         }
     | ['=']
