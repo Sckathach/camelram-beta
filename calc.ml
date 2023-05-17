@@ -170,7 +170,7 @@ let eval = eval_with_args []
 
 (**
     FUNCTION eval_function
-    @type val eval_function : expr -> value list -> value = <fun>
+    @type val eval_function : expr -> value list -> value = <fun> failwith "ERREUR : Il faut une variable muette pour l'intégrale"
     @raises Invalid_argument if the given arg list doesn't have the required length
     @example Eval f(2, 1) -> eval_function f [VInt 2; VInt 1];;
 *)
@@ -416,6 +416,7 @@ let rec simplify args expr =
                     | UCos ->
                         begin
                             match e with
+                                | EUOp(UAcos, e) -> e
                                 | EInt(0) -> EInt(1)
                                 | EInt(x) -> EFloat(Float.cos(float_of_int x))
                                 | EFloat(x) -> EFloat(Float.cos(x))
@@ -424,6 +425,7 @@ let rec simplify args expr =
                     | USin -> 
                         begin
                             match e with
+                                | EUOp(UAsin, e) -> e
                                 | EInt(0) -> EInt(0)
                                 | EInt(x) -> EFloat(Float.sin(float_of_int x))
                                 | EFloat(x) -> EFloat(Float.sin(x))
@@ -432,6 +434,7 @@ let rec simplify args expr =
                     | UTan ->
                         begin
                             match e with
+                                | EUOp(UTan, e) -> e
                                 | EInt(0) -> EInt(0)
                                 | EInt(x) -> EFloat(Float.tan(float_of_int x))
                                 | EFloat(x) -> EFloat(Float.tan(x))
@@ -448,23 +451,72 @@ let rec simplify args expr =
                     | UAsin ->
                         begin
                             match e with
-                                | EInt(0) -> EInt(1)
-                                | EInt(x) -> EFloat(Float.cos(float_of_int x))
-                                | EFloat(x) -> EFloat(Float.cos(x))
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.asin(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.asin(x))
                                 | _ -> EUop(op, (simplify args e))
                         end
-                    | UAtan -> 
+                    | UAtan ->
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.atan(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.atan(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
                     | UCosh -> 
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(1)
+                                | EInt(x) -> EFloat(Float.cosh(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.cosh(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
                     | USinh -> 
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.sinh(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.sinh(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
                     | UTanh -> 
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.tanh(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.tanh(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
                     | UCeil -> 
+                        begin
+                            match e with
+                                | EInt(x) -> EInt(int_of_float Float.ceil(float_of_int x))
+                                | EFloat(x) -> EInt(int_of_float Float.ceil(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
                     | UFloor -> 
+                        begin
+                            match e with
+                                | EInt(x) -> EInt(int_of_float Float.floor(float_of_int x))
+                                | EFloat(x) -> EInt(int_of_float Float.floor(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
                     | URound ->
-        | ELet(x, value, e) -> Variable.add x (eval_with_args args value); simplify args Down e
+                        begin
+                            match e with
+                                | EInt(x) -> EInt(int_of_float Float.round(float_of_int x))
+                                | EFloat(x) -> EInt(int_of_float Float.round(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+        | ELet(x, value, e) -> match (simplify args value) with
+            | EInt(x) -> Variable.add x VInt(x); simplify args e
+            | EFloat(x) -> Variable.add x VFloat(x); simplify args e
+            | _ -> ELet(x, (simplify args value), (simplify args e))
         | EIntegral(e1, e2, e3) ->
             let dummies = seek_mute_var e3 in
                 if List.length dummies != 1 then
-                    failwith "ERREUR : Il faut une variable muette pour l'intégrale"
+                    EIntegral(simplify args e1, simplify args e2, simplify args e3)
                 else
                     eval_with_args args (EIntegralD(e1, e2, e3, EVar(List.hd dummies)))
         | EIntegralD(e1, e2, e3, EVar(d)) ->
