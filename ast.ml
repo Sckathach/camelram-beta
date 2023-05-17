@@ -19,6 +19,8 @@ type uop =  UMinus | UExp | ULog | UCos | USin | UTan
     Type of the Abstract Syntax Tree
 *)
 type expr =
+    | EEval         of expr
+    | ESimplify     of expr
     | EInt          of int
     | EFloat        of float
     | EBop          of bop * expr * expr
@@ -140,3 +142,4 @@ let rec latex_of_expr = function
         "\\frac{\\mathrm{d}}{\\mathrm{d}" ^ (latex_of_expr x) ^ "}(" ^ (latex_of_expr expr) ^ ")"
     | ELet(x, e1, e2) ->
         "let " ^ x ^ " = " ^ (latex_of_expr e1) ^ " in " ^ (latex_of_expr e2)
+

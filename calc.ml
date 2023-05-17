@@ -2,6 +2,7 @@ open Ast
 open Variable
 open General
 open Function
+open Polynomial
 
 (**
     FUNCTION fun_of_bop
@@ -254,6 +255,11 @@ let rec split_var = function
     | EIntegralD(e1, e2, e3, e4) -> EIntegralD(split_var e1, split_var e2, split_var e3, e4)
 
 
+(**
+    FUNCTION differentiate
+    @type val differentiate : expr -> string -> expr
+    @returns The derivative of expr with respect to the variable given as argument
+*)
 let rec differentiate expr x=
     match expr with
         | EDifferentiate(e1, y) -> EDifferentiate((differentiate e1 x), y)
@@ -302,3 +308,11 @@ let rec differentiate expr x=
         | EInt(_) -> EInt(0)
         | EVar(y) when y = x -> EInt(1)
         | EVar(y) -> EInt(0)
+
+let simplify_polynomial = function
+    | EBop(bop, e1, e2) ->
+        begin
+            match bop with
+                | BDiv -> Polynomial.simplify_frac (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2))
+                | BMul -> Polynomial.mult (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2))
+
