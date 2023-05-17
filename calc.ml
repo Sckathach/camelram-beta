@@ -309,10 +309,11 @@ let rec differentiate expr x=
         | EVar(y) when y = x -> EInt(1)
         | EVar(y) -> EInt(0)
 
-let simplify_polynomial = function
-    | EBop(bop, e1, e2) ->
-        begin
-            match bop with
-                | BDiv -> Polynomial.simplify_frac (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2))
-                | BMul -> Polynomial.mult (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2))
+(* let simplify_polynomial = function *)
+(*    | EBop(bop, e1, e2) -> *)
+(*        begin *)
+(*            match bop with *)
+(*                | BDiv -> Polynomial.simplify_frac (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
+(*                | BMul -> Polynomial.mult (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
+(*        end *)
 

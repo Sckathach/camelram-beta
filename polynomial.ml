@@ -1,8 +1,6 @@
 module type Polynomial = sig
     exception BadType
     val add : Ast.expr -> Ast.expr -> Ast.expr
-    val simplify_frac : Ast.expr -> Ast.expr -> Ast.expr
-    val mult : Ast.expr -> Ast.expr -> Ast.expr
 end
 
 module Polynomial : Polynomial = struct
