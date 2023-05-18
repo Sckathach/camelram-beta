@@ -509,6 +509,7 @@ let rec simplify args expr =
                                 | EFloat(x) -> EInt(int_of_float Float.round(x))
                                 | _ -> EUop(op, (simplify args e))
                         end
+            end
         | ELet(x, value, e) -> match (simplify args value) with
             | EInt(x) -> Variable.add x VInt(x); simplify args e
             | EFloat(x) -> Variable.add x VFloat(x); simplify args e
