@@ -21,12 +21,12 @@ let fun_of_bop = function
     @type val fun_of_pop : pop -> value -> value -> value = <fun>
     @returns The function (val fun : value -> value -> value = <fun>) found in polynomial.ml
 *)
-(* let fun_of_pop = function *)
-(*    | PGcd -> Polynomial.gcd *)
-(*    | PMult -> Polynomial.mult *)
-(*    | PAdd -> Polynomial.add *)
-(*    | PMultScal -> Polynomial.mult_scal *)
-(*    | PDiv -> Polynomial.div *)
+ let fun_of_pop = function
+    | PGcd -> Polynomial.gcd
+    | PAdd -> Polynomial.add
+    | PMultScal -> Polynomial.mult_scal
+    | PDivR -> Polynomial.divr
+    | PDivQ -> Polynomial.divq
 
 (**
     FUNCTION fun_of_uop

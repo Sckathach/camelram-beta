@@ -1,10 +1,13 @@
-(* module type Polynomial = sig *)
-(*    exception BadType *)
-(*    val add : Ast.expr -> Ast.expr -> Ast.expr *)
-(* end *)
-(*  *)
-(* module Polynomial : Polynomial = struct *)
-module Polynomial = struct
+module type Polynomial = sig
+    exception BadType
+    val add : Ast.expr -> Ast.expr -> Ast.expr
+    val divr : Ast.expr -> Ast.expr -> Ast.expr
+    val divq : Ast.expr -> Ast.expr -> Ast.expr
+    val gcd : Ast.expr -> Ast.expr -> Ast.expr
+    val mult_scal : Ast.expr -> Ast.expr -> Ast.expr
+end
+
+module Polynomial : Polynomial = struct
     open Ast
     open General
     exception BadType
@@ -151,9 +154,13 @@ module Polynomial = struct
         let f = expr_of_pol vara e in
         EPolImplicit(f);;
 
+    let divr_poly p q = snd (div_poly p q)
+    let divq_poly p q = fst (div_poly p q)
+
     let add = apply_fun add_poly
 (*    let mult = apply_fun karatsuba *)
-(*    let div = apply_fun div_poly *)
+    let divr = apply_fun divr_poly
+    let divq = apply_fun divq_poly
     let gcd = apply_fun gcd_poly
 
     let mult_scal a p =
