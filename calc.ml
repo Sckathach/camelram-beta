@@ -254,10 +254,9 @@ let rec split_var = function
     | EIntegral(e1, e2, e3) -> EIntegral(split_var e1, split_var e2, split_var e3)
     | EIntegralD(e1, e2, e3, e4) -> EIntegralD(split_var e1, split_var e2, split_var e3, e4)
 
-
 (**
     FUNCTION differentiate
-    @type val differentiate : expr -> string -> expr
+    @type val differentiate : expr -> string -> expr = <fun>
     @returns The derivative of expr with respect to the variable given as argument
 *)
 let rec differentiate expr x=
@@ -317,3 +316,247 @@ let rec differentiate expr x=
 (*                | BMul -> Polynomial.mult (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
 (*        end *)
 
+
+
+
+
+(**
+    FUNCTION simplify
+    @type val simplify : (arg * value) list -> expr -> expr = <fun>
+*)
+let rec simplify args expr =
+    match expr with
+        | EInt(x) -> EInt(x)
+        | EFloat(x) -> EFloat(x)
+        | EVar(x) ->
+            begin
+                match (find_arg x args) with
+                    | Some(y) -> EFloat(y)
+                    | None ->
+                        begin
+                            match (Variable.get x) with
+                                | Some(z) -> EFloat(z)
+                                | None -> EVar(x)
+                        end
+            end
+        | EBop(op, e1, e2) ->
+            begin
+                match op with
+                    | BAdd ->
+                        begin
+                            match e1,e2 with
+                                | EInt(0), _ -> e2
+                                | _, EInt(0) -> e1
+                                | EInt(x), EInt(y) -> EInt(x + y)
+                                | EInt(x), EFloat(y) -> EInt((float_of_int x) +. y)
+                                | EFloat(x), EInt(y) -> EFloat(x +. (float_of_int y))
+                                | EFloat(x), EFloat(y) -> EFLoat(x +. y)
+                                | _, _ -> EBop(op, (simplify args e1), (simplify args e2))
+                        end
+                    | BSub ->
+                        begin
+                            match e1,e2 with
+                                | EInt(0), _ -> EUOp(UMinus, e2)
+                                | _, EInt(0) -> e1
+                                | EInt(x), EInt(y) -> EInt(x - y)
+                                | EInt(x), EFloat(y) -> EFLoat((float_of_int x) -. y)
+                                | EFloat(x), EInt(y) -> EFloat(x -. (float_of_int y))
+                                | EFloat(x), EFloat(y) -> EFloat(x -. y)
+                                | _, _ -> EBop(op, (simplify args e1), (simplify args e2))
+                        end
+                    | BMul ->
+                        begin
+                            match e1,e2 with
+                                | EInt(0), _ -> EInt(0)
+                                | _, EInt(0) -> EInt(0)
+                                | EInt(1), _ -> e2
+                                | _, EInt(1) -> e1
+                                | EInt(x), EInt(y) -> EInt(x * y)
+                                | EInt(x), EFloat(y) -> EFLoat((float_of_int x) *. y)
+                                | EFloat(x), EInt(y) -> EFloat(x *. (float_of_int y))
+                                | EFloat(x), EFloat(y) -> EFLoat(x *. y)
+                                | _, _ -> EBop(op, (simplify args e1), (simplify args e2))
+                        end
+                    | BDiv ->
+                        begin
+                            match e1,e2 with
+                                | _, EInt(0) -> failwith "Division par zéro"
+                                | _, EInt(1) when y=1 -> e1
+                                | EInt(x), EInt(y) -> EInt(x / y)
+                                | EInt(x), EFloat(y) -> EFLoat((float_of_int x) /. y)
+                                | EFloat(x), EInt(y) -> EFloat(x /. (float_of_int y))
+                                | EFloat(x), EFloat(y) -> EFLoat(x /. y)
+                                | _, _ -> EBop(op, (simplify args e1), (simplify args e2))
+                        end
+                    | BPow ->
+                        begin
+                            match e1,e2 with
+                                | EInt(0), EInt(0) -> failwith "0⁰ : indéfini"
+                                | EInt(0), _ -> EInt(0)
+                                | _, EInt(0) -> EInt(1)
+                                | EInt(1), _ -> EInt(1)
+                                | _, EInt(1) -> e1
+                                | EInt(x), EInt(y) -> EInt((float_of_int x) ** (float_of_int y))
+                                | EInt(x), EFloat(y) -> EInt((float_of_int x) ** y)
+                                | EFloat(x), EInt(y) -> EInt(x ** (float_of_int y))
+                                | EFloat(x), EFloat(y) -> EInt(x ** y)
+                                | _, _ -> EBop(op, (simplify args e1), (simplify args e2))
+                        end
+            end
+        | EUop(op, e) ->
+            begin
+                match op with
+                    | UMinus ->
+                        begin
+                            match e with
+                                | (EUop(UMinus, e2)) -> e2
+                                | EInt(0) -> EInt(0)
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UExp ->
+                        begin
+                            match e with
+                                | EUop(ULog, e) -> e
+                                | EInt(0) -> EInt(1)
+                                | EInt(x) -> EFloat(Float.exp(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.exp(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | ULog ->
+                        begin
+                            match e with
+                                | EUop(UExp, e) -> e
+                                | EInt(1) -> EInt(0)
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UCos ->
+                        begin
+                            match e with
+                                | EUOp(UAcos, e) -> e
+                                | EInt(0) -> EInt(1)
+                                | EInt(x) -> EFloat(Float.cos(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.cos(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | USin ->
+                        begin
+                            match e with
+                                | EUOp(UAsin, e) -> e
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.sin(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.sin(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UTan ->
+                        begin
+                            match e with
+                                | EUOp(UTan, e) -> e
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.tan(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.tan(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UAcos ->
+                        begin
+                            match e with
+                                | EInt(1) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.acos(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.acos(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UAsin ->
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.asin(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.asin(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UAtan ->
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.atan(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.atan(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UCosh ->
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(1)
+                                | EInt(x) -> EFloat(Float.cosh(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.cosh(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | USinh ->
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.sinh(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.sinh(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UTanh ->
+                        begin
+                            match e with
+                                | EInt(0) -> EInt(0)
+                                | EInt(x) -> EFloat(Float.tanh(float_of_int x))
+                                | EFloat(x) -> EFloat(Float.tanh(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UCeil ->
+                        begin
+                            match e with
+                                | EInt(x) -> EInt(int_of_float Float.ceil(float_of_int x))
+                                | EFloat(x) -> EInt(int_of_float Float.ceil(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | UFloor ->
+                        begin
+                            match e with
+                                | EInt(x) -> EInt(int_of_float Float.floor(float_of_int x))
+                                | EFloat(x) -> EInt(int_of_float Float.floor(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+                    | URound ->
+                        begin
+                            match e with
+                                | EInt(x) -> EInt(int_of_float Float.round(float_of_int x))
+                                | EFloat(x) -> EInt(int_of_float Float.round(x))
+                                | _ -> EUop(op, (simplify args e))
+                        end
+            end
+        | ELet(x, value, e) -> match (simplify args value) with
+            | EInt(x) -> Variable.add x VInt(x); simplify args e
+            | EFloat(x) -> Variable.add x VFloat(x); simplify args e
+            | _ -> ELet(x, (simplify args value), (simplify args e))
+        | EIntegral(e1, e2, e3) ->
+            let dummies = seek_mute_var e3 in
+                if List.length dummies != 1 then
+                    EIntegral(simplify args e1, simplify args e2, simplify args e3)
+                else
+                    eval_with_args args (EIntegralD(e1, e2, e3, EVar(List.hd dummies)))
+        | EIntegralD(e1, e2, e3, EVar(d)) ->
+            let inf, sup = (force_value_to_float (eval_with_args args e1)), (force_value_to_float (eval_with_args args e2)) in
+            if inf > sup then
+                eval_with_args args (EUop(UMinus, EIntegralD(e2, e1, e3, EVar(d))))
+            else
+            if inf = 0. then
+                eval_with_args args (EIntegralD(EFloat(Float.epsilon), e2, e3, EVar(d)))
+            else
+            if sup = Float.infinity then
+               eval_with_args args (EIntegralD(EFloat(inf), EFloat(10000.), e3, EVar(d)))
+            else
+            if inf = Float.neg_infinity then
+                eval_with_args args (EIntegralD(EFloat(-10000.), EFloat(sup), e3, EVar(d)))
+            else
+                let eps = 0.01 in
+                let y = ref inf in
+                let f x = eval_with_args ((AVar(d), VFloat(x))::args) e3 in
+                let s = ref (f inf) in
+                while !y < sup do
+                    s := General.add !s (f !y);
+                    y := !y +. eps
+                done;
+                VFloat ((force_value_to_float !s) *. eps)
+        | EIntegralD(_, _, _, _) -> failwith "ERREUR : Syntaxe dans l'intégrale"
