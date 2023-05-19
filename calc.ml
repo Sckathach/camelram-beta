@@ -324,6 +324,7 @@ let rec differentiate expr x=
     FUNCTION simplify
     @type val simplify : (arg * value) list -> expr -> expr = <fun>
 *)
+(*
 let rec simplify args expr =
     match expr with
         | EInt(x) -> EInt(x)
@@ -335,7 +336,7 @@ let rec simplify args expr =
                     | None ->
                         begin
                             match (Variable.get x) with
-                                | Some(z) -> EFloat(z)
+                                | Some(z) -> EFloat(Ast.force_value_to_float z)
                                 | None -> EVar(x)
                         end
             end
@@ -560,3 +561,4 @@ let rec simplify args expr =
                 done;
                 VFloat ((force_value_to_float !s) *. eps)
         | EIntegralD(_, _, _, _) -> failwith "ERREUR : Syntaxe dans l'intégrale"
+*)
