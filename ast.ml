@@ -15,6 +15,12 @@ type uop =  UMinus | UExp | ULog | UCos | USin | UTan
             | UCeil | UFloor | URound
 
 (**
+    TYPE pop
+    Polynomial Operator, used to simplify pattern matching
+*)
+type pop = PGcd | PMult | PAdd | PMultScal | PDiv
+
+(**
     TYPE expr
     Type of the Abstract Syntax Tree
 *)
@@ -33,6 +39,7 @@ type expr =
     | ELet          of string * expr * expr
     | EVar          of string
     | EFun          of func
+    | EPop          of pop * expr * expr
 and func = string * arg list * expr
 and arg =
     | AVar      of string

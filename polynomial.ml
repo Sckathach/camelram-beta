@@ -44,8 +44,6 @@ module Polynomial = struct
     let simplify polynomial =
         List.filter (fun (coeff, _) -> coeff <> VInt 0 && coeff <> VFloat 0.0) polynomial
 
-
-
     let rec add_poly poly1 poly2 =
         match (poly1, poly2) with
         | [], _ -> poly2

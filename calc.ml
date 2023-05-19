@@ -7,7 +7,7 @@ open Polynomial
 (**
     FUNCTION fun_of_bop
     @type val fun_of_bop : bop -> value -> value -> value = <fun>
-    @returns The function (val fun : value -> value -> value) found in general.ml
+    @returns The function (val fun : value -> value -> value = <fun>) found in general.ml
 *)
 let fun_of_bop = function
     | BAdd -> General.add
@@ -15,6 +15,18 @@ let fun_of_bop = function
     | BMul -> General.mult
     | BDiv -> General.div
     | BPow -> General.power
+
+(**
+    FUNCTION fun_of_pop
+    @type val fun_of_pop : pop -> value -> value -> value = <fun>
+    @returns The function (val fun : value -> value -> value = <fun>) found in polynomial.ml
+*)
+(* let fun_of_pop = function *)
+(*    | PGcd -> Polynomial.gcd *)
+(*    | PMult -> Polynomial.mult *)
+(*    | PAdd -> Polynomial.add *)
+(*    | PMultScal -> Polynomial.mult_scal *)
+(*    | PDiv -> Polynomial.div *)
 
 (**
     FUNCTION fun_of_uop

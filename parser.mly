@@ -39,6 +39,11 @@
 %token FRAC
 %token DERIVE
 %token POL
+%token PGCD
+%token PMULT
+%token PADD
+%token PMULTSCAL
+%token PDIV
 
 %left "+" "-"
 %left "*" "/"
@@ -68,6 +73,16 @@ expr:
         { EPol(x, e) }
     | POL e = expr
         { EPolImplicit(e) }
+    | PGCD e1 = expr e2 = expr
+        { EPop(PGcd, EPolImplicit(e1), EPolImplicit(e2)) }
+    | PMULT e1 = expr e2 = expr
+        { EPop(PMult, EPolImplicit(e1), EPolImplicit(e2)) }
+    | PADD e1 = expr e2 = expr
+        { EPop(PAdd, EPolImplicit(e1), EPolImplicit(e2)) }
+    | PMULTSCAL e1 = expr e2 = expr
+        { EPop(PMultScal, e1, EPolImplicit(e2)) }
+    | PDIV e1 = expr e2 = expr
+        { EPop(PDiv, EPolImplicit(e1), EPolImplicit(e2)) }
     | i1 = INT "." i2 = INT
         { EFloat(float_of_string ((string_of_int i1) ^ "." ^ (string_of_int i2))) }
     | i = INT

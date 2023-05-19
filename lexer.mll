@@ -41,6 +41,11 @@ rule token = parse
                 | "\frac" -> FRAC
                 | "\derive" -> DERIVE
                 | "\pol" -> POL
+                | "\pGcd" -> PGCD
+                | "\pMult" -> PMULT
+                | "\pAdd" -> PADD
+                | "\pMultScal" -> PMULTSCAL
+                | "\pDiv" -> PDIV
                 | s -> IDENT(s)
         }
     | ['=']
