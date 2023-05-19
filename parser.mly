@@ -45,6 +45,8 @@
 %token PMULTSCAL
 %token PDIVQ
 %token PDIVR
+%token MODE_FORMAL
+%token MODE_VALUE
 
 %left "+" "-"
 %left "*" "/"
@@ -58,7 +60,15 @@
 %%
 
 main:
-    | e = let_expr EOF
+    | e = mode EOF
+        { e }
+
+mode:
+    | MODE_VALUE e = let_expr
+        { EModeValue(e) }
+    | MODE_FORMAL e = let_expr
+        { EModeFormal(e) }
+    | e = let_expr
         { e }
 
 let_expr:
@@ -70,7 +80,7 @@ let_expr:
 expr:
     | DERIVE e1 = expr e2 = expr
         { EDifferentiate(e1, e2) }
-    | POL x = IDENT e = expr
+    | POL x = IDENT IN e = expr
         { EPol(x, e) }
     | POL e = expr
         { EPolImplicit(e) }

@@ -30,4 +30,4 @@ let main =
                 lexbuf.lex_curr_p.pos_lnum;
             exit 1
     in
-        Printf.printf "%s\n" (Ast.pprint_value (Calc.eval (Calc.split_var res)))
+        Printf.printf "%s\n" (Ast.latex_of_expr (Calc.main res))

@@ -1,5 +1,5 @@
 module type Polynomial = sig
-    exception BadType
+    exception BadType of string
     val add : Ast.expr -> Ast.expr -> Ast.expr
     val divr : Ast.expr -> Ast.expr -> Ast.expr
     val divq : Ast.expr -> Ast.expr -> Ast.expr
@@ -10,14 +10,14 @@ end
 module Polynomial : Polynomial = struct
     open Ast
     open General
-    exception BadType
+    exception BadType of string
 
     type polynomial = (value * int) list
 
     let val_of_expr = function
         | EInt x -> VInt x
         | EFloat x -> VFloat x
-        | _ -> raise BadType
+        | _ -> raise (BadType "val_of_expr")
 
     let expr_of_val = function
         | VInt x -> EInt x
@@ -26,12 +26,12 @@ module Polynomial : Polynomial = struct
 
     let pol_of_expr (variable : string) (expression : expr) : polynomial =
         let rec aux var acc = function
-            | EBop(BAdd, EInt a, b) -> aux var ((VInt a, 0) :: acc) b
-            | EBop(BAdd, EFloat a, b) -> aux var ((VFloat a, 0) :: acc) b
+            | EInt x -> [(VInt x, 0)]
+            | EFloat x -> [(VFloat x, 0)]
             | EBop(BMul, a, EVar var) -> (val_of_expr a, 1) :: acc
             | EBop(BMul, a, EBop(BPow, EVar var, EInt b)) -> (val_of_expr a, b) :: acc
             | EBop(BAdd, a, b) -> (aux var acc a) @ (aux var acc b)
-            | _ -> raise BadType
+            | _ -> raise (BadType "pol_of_expr")
         in aux variable [] expression
 
     let extract = function

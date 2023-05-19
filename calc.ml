@@ -271,7 +271,7 @@ let rec split_var = function
     @type val differentiate : expr -> string -> expr = <fun>
     @returns The derivative of expr with respect to the variable given as argument
 *)
-let rec differentiate expr x=
+let rec differentiate expr x =
     match expr with
         | EDifferentiate(e1, y) -> EDifferentiate((differentiate e1 x), y)
         (*| EIntegralD(e, _, _, EVar(d)) when d=x -> e
@@ -319,6 +319,30 @@ let rec differentiate expr x=
         | EInt(_) -> EInt(0)
         | EVar(y) when y = x -> EInt(1)
         | EVar(y) -> EInt(0)
+
+let rec eval_formal = function
+    | EPol(x, e) -> EPol(x, e)
+    | EPolImplicit e -> EPol("x", e)
+    | EPop(pop, e1, e2) -> (fun_of_pop pop) (eval_formal e1) (eval_formal e2)
+    | EDifferentiate(EVar x, e) -> differentiate (eval_formal e) x
+
+let main = function
+    | EModeValue e ->
+        begin
+            match eval e with
+                | VInt x -> EInt x
+                | VFloat x -> EFloat x
+        end
+    | EModeFormal e -> eval_formal e
+    | e ->
+        begin
+            match eval e with
+                | VInt x -> EInt x
+                | VFloat x -> EFloat x
+        end
+
+
+
 
 (* let simplify_polynomial = function *)
 (*    | EBop(bop, e1, e2) -> *)

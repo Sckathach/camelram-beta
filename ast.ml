@@ -40,6 +40,8 @@ type expr =
     | EVar          of string
     | EFun          of func
     | EPop          of pop * expr * expr
+    | EModeValue    of expr
+    | EModeFormal   of expr
 and func = string * arg list * expr
 and arg =
     | AVar      of string

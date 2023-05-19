@@ -18,6 +18,8 @@ rule token = parse
     | ident as str
         {
             match str with
+                | "value" -> MODE_VALUE
+                | "formal" -> MODE_FORMAL
                 | "\int_" -> INTEGRAL
                 | "let" -> LET
                 | "in" -> IN
@@ -39,7 +41,7 @@ rule token = parse
                 | "\infty" -> INFTY
                 | "\pi" -> PI
                 | "\frac" -> FRAC
-                | "\derive" -> DERIVE
+                | "\diff" -> DERIVE
                 | "\pol" -> POL
                 | "\pGcd" -> PGCD
                 | "\pMult" -> PMULT
