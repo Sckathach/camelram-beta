@@ -20,8 +20,6 @@ module Polynomial = struct
         | VInt x -> EInt x
         | VFloat x -> EFloat x
 
-    let extract = function
-        | EPol(x, p) -> x, p
 
     let pol_of_expr (variable : string) (expression : expr) : polynomial =
         let rec aux var acc = function
@@ -32,6 +30,9 @@ module Polynomial = struct
             | EBop(BAdd, a, b) -> (aux var acc a) @ (aux var acc b)
             | _ -> raise BadType
         in aux variable [] expression
+
+    let extract = function
+        | EPol(x, p) -> x, pol_of_expr x p
 
     let rec expr_of_pol var = function
         | [] -> EInt 0
@@ -65,15 +66,6 @@ module Polynomial = struct
         List.map (fun (coeff, exp) ->
                 (General.mult coeff scalar, exp)
             ) poly
-
-    let add p q =
-        let vara, a = extract p in
-        let varb, b = extract q in
-        let c = pol_of_expr vara a in
-        let d = pol_of_expr varb b in
-        let e = add_poly c d in
-        let f = expr_of_pol vara e in
-        EPol(vara, f)
 
     let rec degree p =
         match p with
@@ -151,4 +143,26 @@ module Polynomial = struct
     ;;
 
     let normalize_gcd_poly p q = normalize_poly (gcd_poly p q);;
+
+    let apply_fun f p q =
+        let vara, a = extract p in
+        let varb, b = extract q in
+        let e = f a b in
+        let f = expr_of_pol vara e in
+        EPolImplicit(f);;
+
+    let add = apply_fun add_poly
+(*    let mult = apply_fun karatsuba *)
+(*    let div = apply_fun div_poly *)
+    let gcd = apply_fun gcd_poly
+
+    let mult_scal a p =
+        let aux = function
+            | EInt x -> VInt x
+            | EFloat x -> VFloat x
+        in
+        let varb, b = extract p in
+        let e = mult_scal_poly (aux a) b in
+        let f = expr_of_pol varb e in
+        EPolImplicit(f);;
 end

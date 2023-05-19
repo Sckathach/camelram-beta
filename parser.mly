@@ -43,7 +43,8 @@
 %token PMULT
 %token PADD
 %token PMULTSCAL
-%token PDIV
+%token PDIVQ
+%token PDIVR
 
 %left "+" "-"
 %left "*" "/"
@@ -81,8 +82,10 @@ expr:
         { EPop(PAdd, EPolImplicit(e1), EPolImplicit(e2)) }
     | PMULTSCAL e1 = expr e2 = expr
         { EPop(PMultScal, e1, EPolImplicit(e2)) }
-    | PDIV e1 = expr e2 = expr
-        { EPop(PDiv, EPolImplicit(e1), EPolImplicit(e2)) }
+    | PDIVQ e1 = expr e2 = expr
+        { EPop(PDivQ, EPolImplicit(e1), EPolImplicit(e2)) }
+    | PDIVR e1 = expr e2 = expr
+        { EPop(PDivR, EPolImplicit(e1), EPolImplicit(e2)) }
     | i1 = INT "." i2 = INT
         { EFloat(float_of_string ((string_of_int i1) ^ "." ^ (string_of_int i2))) }
     | i = INT

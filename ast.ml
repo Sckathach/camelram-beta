@@ -18,7 +18,7 @@ type uop =  UMinus | UExp | ULog | UCos | USin | UTan
     TYPE pop
     Polynomial Operator, used to simplify pattern matching
 *)
-type pop = PGcd | PMult | PAdd | PMultScal | PDiv
+type pop = PGcd | PMult | PAdd | PMultScal | PDivQ | PDivR
 
 (**
     TYPE expr

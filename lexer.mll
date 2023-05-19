@@ -45,7 +45,8 @@ rule token = parse
                 | "\pMult" -> PMULT
                 | "\pAdd" -> PADD
                 | "\pMultScal" -> PMULTSCAL
-                | "\pDiv" -> PDIV
+                | "\pDivQ" -> PDIVQ
+                | "\pDivR" -> PDIVR
                 | s -> IDENT(s)
         }
     | ['=']
