@@ -7,7 +7,7 @@ open Calc
 ( o.o )
  > ^ <
 
- To protect the code from bugs
+To protect the code from bugs
 *)
 
 (**

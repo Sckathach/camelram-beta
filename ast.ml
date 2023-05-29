@@ -55,6 +55,14 @@ type value =
     | VFloat    of float
 
 (**
+    FUNCTION expr_of_value
+    @type val expr_of_value : value -> expr = <fun>
+*)
+let expr_of_value = function
+    | VInt(x) -> EInt x
+    | VFloat(x) -> EFloat x
+
+(**
     FUNCTION force_value_to_float
     @type val force_value_to_float : value -> float = <fun>
 *)

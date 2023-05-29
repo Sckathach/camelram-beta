@@ -4,6 +4,8 @@ open General
 open Function
 open Polynomial
 
+exception EvaluationNotPossible
+
 (**
     FUNCTION fun_of_bop
     @type val fun_of_bop : bop -> value -> value -> value = <fun>
@@ -136,7 +138,7 @@ let rec eval_with_args args = function
                     begin
                         match (Variable.get x) with
                             | Some(z) -> z
-                            | None -> failwith "ERREUR : Variable introuvable"
+                            | None -> raise EvaluationNotPossible
                     end
         end
     | EBop(op, e1, e2) -> (fun_of_bop op) (eval_with_args args e1) (eval_with_args args e2)
@@ -324,7 +326,7 @@ let rec eval_formal = function
     | EPol(x, e) -> EPol(x, e)
     | EPolImplicit e -> EPol("x", e)
     | EPop(pop, e1, e2) -> (fun_of_pop pop) (eval_formal e1) (eval_formal e2)
-    | EDifferentiate(EVar x, e) -> differentiate (eval_formal e) x
+    | EDifferentiate(EVar x, e) -> differentiate e x
 
 let main = function
     | EModeValue e ->
@@ -341,7 +343,34 @@ let main = function
                 | VFloat x -> EFloat x
         end
 
+let is_zero = function
+    | EInt x -> (x = 0)
+    | EFloat x -> (x = 0.)
+    | _ -> false
+let is_one = function
+    | EInt x -> (x = 1)
+    | EFloat x -> (x = 1.)
+    | _ -> false
 
+let rec simplify = function
+    | EInt(x) -> EInt(x)
+    | EVar(x) ->
+        begin
+            try Ast.expr_of_value (eval (EVar x)) with
+                EvaluationNotPossible -> EVar(x)
+        end
+    | EBop(bop, e1, e2) ->
+        begin
+            let a = try Ast.expr_of_value (eval e1) with
+                EvaluationNotPossible -> simplify e1 in
+            let b = try Ast.expr_of_value (eval e2) with
+                EvaluationNotPossible -> simplify e2 in
+            match bop, e1, e2 with
+                | BAdd, x, y when is_zero x -> y
+                | BAdd, x, y when is_zero y -> x
+                | _ -> try Ast.expr_of_value (eval (EBop(bop, a, b))) with
+                        EvaluationNotPossible -> EBop(bop, a, b)
+        end
 
 
 (* let simplify_polynomial = function *)
