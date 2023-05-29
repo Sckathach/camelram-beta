@@ -322,27 +322,6 @@ let rec differentiate expr x =
         | EVar(y) when y = x -> EInt(1)
         | EVar(y) -> EInt(0)
 
-let rec eval_formal = function
-    | EPol(x, e) -> EPol(x, e)
-    | EPolImplicit e -> EPol("x", e)
-    | EPop(pop, e1, e2) -> (fun_of_pop pop) (eval_formal e1) (eval_formal e2)
-    | EDifferentiate(EVar x, e) -> differentiate e x
-
-let main = function
-    | EModeValue e ->
-        begin
-            match eval e with
-                | VInt x -> EInt x
-                | VFloat x -> EFloat x
-        end
-    | EModeFormal e -> eval_formal e
-    | e ->
-        begin
-            match eval e with
-                | VInt x -> EInt x
-                | VFloat x -> EFloat x
-        end
-
 let is_zero = function
     | EInt x -> (x = 0)
     | EFloat x -> (x = 0.)
@@ -372,6 +351,22 @@ let rec simplify = function
                         EvaluationNotPossible -> EBop(bop, a, b)
         end
 
+let rec eval_formal = function
+    | EPol(x, e) -> EPol(x, e)
+    | EPolImplicit e -> EPol("x", e)
+    | EPop(pop, e1, e2) -> (fun_of_pop pop) (eval_formal e1) (eval_formal e2)
+    | EDifferentiate(EVar x, e) -> differentiate e x
+
+let main = function
+    | EModeFormal e -> eval_formal e
+    | EModeValue e | e ->
+        begin
+            match eval e with
+                | VInt x -> EInt x
+                | VFloat x -> EFloat x
+        end
+
+
 
 (* let simplify_polynomial = function *)
 (*    | EBop(bop, e1, e2) -> *)
@@ -380,10 +375,6 @@ let rec simplify = function
 (*                | BDiv -> Polynomial.simplify_frac (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
 (*                | BMul -> Polynomial.mult (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
 (*        end *)
-
-
-
-
 
 (**
     FUNCTION simplify

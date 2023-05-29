@@ -23,7 +23,6 @@ module Polynomial : Polynomial = struct
         | VInt x -> EInt x
         | VFloat x -> EFloat x
 
-
     let pol_of_expr (variable : string) (expression : expr) : polynomial =
         let rec aux var acc = function
             | EInt x -> [(VInt x, 0)]
