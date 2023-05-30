@@ -331,49 +331,24 @@ let is_one = function
     | EFloat x -> (x = 1.)
     | _ -> false
 
-let rec simplify = function
-    | EInt(x) -> EInt(x)
-    | EVar(x) ->
-        begin
-            try Ast.expr_of_value (eval (EVar x)) with
-                EvaluationNotPossible -> EVar(x)
-        end
-    | EBop(bop, e1, e2) ->
-        begin
-            let a = try Ast.expr_of_value (eval e1) with
-                EvaluationNotPossible -> simplify e1 in
-            let b = try Ast.expr_of_value (eval e2) with
-                EvaluationNotPossible -> simplify e2 in
-            match bop, e1, e2 with
-                | BAdd, x, y when is_zero x -> y
-                | BAdd, x, y when is_zero y -> x
-                | _ -> try Ast.expr_of_value (eval (EBop(bop, a, b))) with
-                        EvaluationNotPossible -> EBop(bop, a, b)
-        end
-
-let rec eval_formal = function
-    | EPol(x, e) -> EPol(x, e)
-    | EPolImplicit e -> EPol("x", e)
-    | EPop(pop, e1, e2) -> (fun_of_pop pop) (eval_formal e1) (eval_formal e2)
-    | EDifferentiate(EVar x, e) -> differentiate e x
-
-let main = function
-    | EModeFormal e -> eval_formal e
-    | EModeValue e | e ->
-        begin
-            match eval e with
-                | VInt x -> EInt x
-                | VFloat x -> EFloat x
-        end
-
-
-
-(* let simplify_polynomial = function *)
+(* let rec simplify = function *)
+(*    | EInt(x) -> EInt(x) *)
+(*    | EVar(x) -> *)
+(*        begin *)
+(*            try Ast.expr_of_value (eval (EVar x)) with *)
+(*                EvaluationNotPossible -> EVar(x) *)
+(*        end *)
 (*    | EBop(bop, e1, e2) -> *)
 (*        begin *)
-(*            match bop with *)
-(*                | BDiv -> Polynomial.simplify_frac (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
-(*                | BMul -> Polynomial.mult (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
+(*            let a = try Ast.expr_of_value (eval e1) with *)
+(*                EvaluationNotPossible -> simplify e1 in *)
+(*            let b = try Ast.expr_of_value (eval e2) with *)
+(*                EvaluationNotPossible -> simplify e2 in *)
+(*            match bop, e1, e2 with *)
+(*                | BAdd, x, y when is_zero x -> y *)
+(*                | BAdd, x, y when is_zero y -> x *)
+(*                | _ -> try Ast.expr_of_value (eval (EBop(bop, a, b))) with *)
+(*                        EvaluationNotPossible -> EBop(bop, a, b) *)
 (*        end *)
 
 (**
@@ -389,7 +364,7 @@ let rec simplify expr =
                 match (Variable.get x) with
                     | Some(z) -> EFloat(Ast.force_value_to_float z)
                     | None -> EVar(x)
-            end    
+            end
         | EBop(op, e1, e2) ->
             begin
                 match op with
@@ -578,14 +553,14 @@ let rec simplify expr =
                         end
             end
         | ELet(x, value, e) -> match (simplify value) with
-            | EInt(y) -> 
+            | EInt(y) ->
                 begin
-                    Variable.add x (VInt(y)); 
+                    Variable.add x (VInt(y));
                     simplify e
                 end
-            | EFloat(y) -> 
+            | EFloat(y) ->
                 begin
-                    Variable.add x (VFloat(y)); 
+                    Variable.add x (VFloat(y));
                     simplify e
                 end
             | _ -> ELet(x, (simplify value), (simplify e))
@@ -619,3 +594,30 @@ let rec simplify expr =
                 done;
                 EFloat ((force_value_to_float !s) *. eps)
         | EIntegralD(_, _, _, _) -> failwith "ERREUR : Syntaxe dans l'intégrale"
+
+
+let rec eval_formal = function
+    | EPol(x, e) -> EPol(x, e)
+    | EPolImplicit e -> EPol("x", e)
+    | EPop(pop, e1, e2) -> (fun_of_pop pop) (eval_formal e1) (eval_formal e2)
+    | EDifferentiate(EVar x, e) -> simplify (simplify (simplify (differentiate e x)))
+    | e -> e
+
+let main = function
+    | EModeFormal e -> eval_formal e
+    | EModeValue e | e ->
+        begin
+            match eval e with
+                | VInt x -> EInt x
+                | VFloat x -> EFloat x
+        end
+
+
+
+(* let simplify_polynomial = function *)
+(*    | EBop(bop, e1, e2) -> *)
+(*        begin *)
+(*            match bop with *)
+(*                | BDiv -> Polynomial.simplify_frac (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
+(*                | BMul -> Polynomial.mult (EPol(seek_mute_var e1, e1)) (EPol(seek_mute_var e2, e2)) *)
+(*        end *)
