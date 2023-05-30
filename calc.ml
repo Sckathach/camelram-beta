@@ -597,22 +597,15 @@ let rec simplify expr =
 
 
 let rec eval_formal = function
-    | EPol(x, e) -> EPol(x, e)
-    | EPolImplicit e -> EPol("x", e)
-    | EPop(pop, e1, e2) -> (fun_of_pop pop) (eval_formal e1) (eval_formal e2)
-    | EDifferentiate(EVar x, e) -> simplify (simplify (simplify (differentiate e x)))
-    | e -> e
+(*    | EPol(x, e) -> EPol(x, e) *)
+(*    | EPolImplicit e -> EPol("x", e) *)
+(*    | EPop(pop, e1, e2) -> (fun_of_pop pop) (eval_formal e1) (eval_formal e2) *)
+    | EDifferentiate(EVar x, e) -> simplify (simplify (simplify (simplify (differentiate e x))))
+    | e -> simplify (simplify (simplify (simplify e)))
 
 let main = function
     | EModeFormal e -> eval_formal e
-    | EModeValue e | e ->
-        begin
-            match eval e with
-                | VInt x -> EInt x
-                | VFloat x -> EFloat x
-        end
-
-
+    | EModeValue e | e -> Ast.expr_of_value (eval e)
 
 (* let simplify_polynomial = function *)
 (*    | EBop(bop, e1, e2) -> *)
