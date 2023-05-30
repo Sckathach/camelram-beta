@@ -7,6 +7,7 @@ This compiler aims to compile parts of LaTeX. There is already :
 \round`
 - approximation of integrals : `\int`
 - local variables : `let x = 2^64 in`
+- derivation : `formal \diff{x}{x^2 + \sin{x}}`
 
 Examples:
 
@@ -19,6 +20,12 @@ $$\displaystyle{\int_0^{\displaystyle{\frac{1}{\pi}\int_{-\infty}^{+\infty}{\fra
 ```sh 
  camelrambeta "let a = \int_{-\infty}^{\infty}{\sin(x)/x}/\pi in \int_0^a{\int_{y+1}^0{(1-\exp(z*y))/z}d(z)}d(y)"   
 > 1.228285
+```
+
+Example of derivation: 
+```sh 
+camelrambeta "formal \diff{x}{x^2}"
+> 2 * x 
 ```
 
 See the to-do list in the [issues](https://github.com/Camelram-Beta/compiler/issues).
