@@ -135,5 +135,3 @@ make test LIB="ast calc" TEST="playground"
 ```sh 
 menhir path/to/file/parser.mly --explain
 ```
-
-test
