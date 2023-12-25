@@ -58,6 +58,7 @@ add-apt-repository ppa:avsm/ppa
 apt update
 apt install opam
 
+opam init
 eval $(opam env)
 
 opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
@@ -67,6 +68,7 @@ opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
 ```sh
 pacman -S opam
 
+opam init
 eval $(opam env)
 
 opam install dune merlin ocaml-lsp-server odoc ocamlformat utop dune-release
